@@ -3,5 +3,5 @@ return {
   cmd = { 'svelteserver', '--stdio' },
   filetypes = { 'svelte' },
   root_markers = { 'package.json', '.git' },
-  install = 'npm install -g svelte-language-server',
+  install = { npm = { 'svelte-language-server' } },
 }

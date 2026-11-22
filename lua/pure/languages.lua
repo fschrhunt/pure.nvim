@@ -8,6 +8,8 @@ local group = vim.api.nvim_create_augroup('pure.languages', {})
 
 -- Language servers ----------------------------------------------------------
 
+local servers = require('pure.servers')
+
 local languages = {}
 for _, path in ipairs(vim.api.nvim_get_runtime_file('lsp/*.lua', true)) do
   local name = vim.fn.fnamemodify(path, ':t:r')
@@ -16,70 +18,110 @@ end
 
 local function installed(name) return vim.fn.executable(languages[name].cmd[1]) == 1 end
 
--- The language (lsp/ file name) for a file type whose server isn't installed.
-local function missing_language(filetype)
-  for name, config in pairs(languages) do
-    if vim.tbl_contains(config.filetypes, filetype) and not installed(name) then
-      return name, config
-    end
-  end
-end
-
 for name in pairs(languages) do
   if installed(name) then
     vim.lsp.enable(name)
   end
 end
 
--- Installs a language's server in the background, then starts it.
+-- Installs (or updates) a server in the background, then starts it. When
+-- Neovim runs without a screen, as a script or a coding agent would run
+-- `nvim --headless '+Install rust' +qa`, it waits for the install to finish.
 local function install(name)
-  local config = languages[name]
-  local server = config.cmd[1]
+  local server = languages[name].cmd[1]
   vim.notify(('Installing %s…'):format(server))
-  vim.system(
-    { 'sh', '-c', config.install },
-    { text = true },
-    vim.schedule_wrap(function(result)
-      if result.code ~= 0 or not installed(name) then
-        local output =
-          vim.split(vim.trim(result.stderr ~= '' and result.stderr or result.stdout), '\n')
-        return vim.notify(
-          ('Could not install %s: %s'):format(server, output[#output]),
-          vim.log.levels.ERROR
-        )
-      end
+  local finished = false
+  servers.install(name, function(ok, message)
+    finished = true
+    vim.notify(message, ok and vim.log.levels.INFO or vim.log.levels.ERROR)
+    if ok then
       vim.lsp.enable(name)
-      vim.notify(server .. ' is installed.')
-    end)
-  )
+    end
+  end)
+  if #vim.api.nvim_list_uis() == 0 then
+    vim.wait(10 * 60 * 1000, function() return finished end, 200)
+  end
 end
 
 -- Opening a file whose server is missing asks once per language, in a toast.
+-- A server already on PATH is used without asking.
 local asked = {}
 vim.api.nvim_create_autocmd('FileType', {
   group = group,
-  desc = 'Offer to install a missing language server, once per language',
+  desc = 'Offer to install missing language servers',
   callback = function(args)
-    local name, config = missing_language(args.match)
-    if name and not asked[name] then
-      asked[name] = true
-      local label = name:sub(1, 1):upper() .. name:sub(2)
-      require('pure.toast').ask({
-        title = ('Install %s?'):format(config.cmd[1]),
-        message = ('%s files get errors and completion from it.'):format(label),
-        on_yes = function() install(name) end,
-      })
+    for name, config in pairs(languages) do
+      local missing = vim.tbl_contains(config.filetypes, args.match) and not installed(name)
+      if missing and not asked[name] then
+        asked[name] = true
+        local label = name:sub(1, 1):upper() .. name:sub(2)
+        require('pure.toast').ask({
+          title = ('Install %s?'):format(config.cmd[1]),
+          message = ('%s files get errors and completion from it.'):format(label),
+          on_yes = function() install(name) end,
+        })
+      end
     end
   end,
 })
 
-vim.api.nvim_create_user_command('Install', function()
-  local name = missing_language(vim.bo.filetype)
-  if not name then
+-- :install installs the servers this file is missing; :install <language>
+-- installs or updates that one, such as :install rust or :install harper.
+vim.api.nvim_create_user_command('Install', function(opts)
+  if opts.args ~= '' then
+    if not languages[opts.args] then
+      return vim.notify('No language called ' .. opts.args, vim.log.levels.WARN)
+    end
+    return install(opts.args)
+  end
+  local missing = vim.tbl_filter(
+    function(name)
+      return vim.tbl_contains(languages[name].filetypes, vim.bo.filetype) and not installed(name)
+    end,
+    vim.tbl_keys(languages)
+  )
+  if #missing == 0 then
     return vim.notify('Nothing to install for this file.')
   end
-  install(name)
-end, { desc = "Install the language server for this file's language" })
+  for _, name in ipairs(missing) do
+    install(name)
+  end
+end, {
+  nargs = '?',
+  complete = function(lead)
+    local names = vim.tbl_keys(languages)
+    table.sort(names)
+    return vim.tbl_filter(function(name) return vim.startswith(name, lead) end, names)
+  end,
+  desc = 'Install a language server',
+})
+
+-- Updates every server pure installed.
+vim.api.nvim_create_user_command('UpdateServers', function()
+  local names = vim.tbl_keys(servers.installed())
+  if #names == 0 then
+    return vim.notify('pure has not installed any language servers.')
+  end
+  for _, name in ipairs(names) do
+    install(name)
+  end
+end, { desc = 'Update the language servers pure installed' })
+
+-- Once a week, a moment after starting, look for newer versions and ask.
+vim.defer_fn(function()
+  servers.check_updates(function(names)
+    table.sort(names)
+    require('pure.toast').ask({
+      title = ('Update %d language server%s?'):format(#names, #names == 1 and '' or 's'),
+      message = 'Newer versions of ' .. table.concat(names, ', ') .. '.',
+      on_yes = function()
+        for _, name in ipairs(names) do
+          install(name)
+        end
+      end,
+    })
+  end)
+end, 3000)
 
 vim.diagnostic.config({
   severity_sort = true,

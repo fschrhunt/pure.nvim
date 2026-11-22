@@ -4,5 +4,5 @@ return {
   filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
   root_markers = { { 'package-lock.json', 'yarn.lock', 'pnpm-lock.yaml', 'bun.lock' }, '.git' },
   init_options = { hostInfo = 'neovim' },
-  install = 'brew install typescript-language-server',
+  install = { npm = { 'typescript-language-server', 'typescript' } },
 }

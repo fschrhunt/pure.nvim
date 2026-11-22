@@ -24,7 +24,10 @@ keep each change to what it needs.
 - `lua/pure/languages.lua`: starting installed servers, offering missing ones, diagnostics,
   completion, and formatting.
 - `lsp/`: one file per language, named after it (`go.lua`, `python.lua`), with its server's
-  command, file types, settings, and `install` command.
+  command, file types, settings, and `install` recipe. `harper.lua` is spelling and grammar for
+  prose.
+- `lua/pure/servers.lua`: installs servers from their recipes into `~/.local/share/nvim/servers`,
+  and checks for updates.
 - `lua/pure/actions.lua`: every action, its Space key, and the command palette.
 - `lua/pure/places.lua`: the browser-style back and forward history of files and folders.
 - `lua/pure/panels.lua`: how floating windows look: padding and the blue bar, no outline.
@@ -40,14 +43,14 @@ keep each change to what it needs.
 
 ## Conventions
 
-- Every user-facing action goes in the `actions` list so it reaches the command palette. Space keys and
-  plain-word commands are made from that list; don't define them elsewhere. The exception is
-  `Space y` / `Space n`, which exist only while a toast is asking. A command word must
-  not shadow a Neovim command unless `docs/commands.md` lists it as replaced.
+- Every user-facing action goes in the `actions` list so it reaches the command palette. Space
+  keys and plain-word commands are made from that list; don't define them elsewhere. The
+  exception is `Space y` / `Space n`, which exist only while a toast is asking. A command word
+  must not shadow a Neovim command unless `docs/commands.md` lists it as replaced.
 - Colors come only from the color table in `colors/pure.lua`. The scheme never sets `Normal`'s
   background.
-- Don't change Neovim's built-in keys; they're listed in the command palette instead. The one exception is
-  `j` and `k`, which move through wrapped lines the way they look.
+- Don't change Neovim's built-in keys; they're listed in the command palette instead. The one
+  exception is `j` and `k`, which move through wrapped lines the way they look.
 - One key per action. Turn off plugin keys that duplicate another key or aren't documented in
   `docs/keys.md`.
 - Name autocommand groups `pure.<module>`.

@@ -87,6 +87,7 @@ local actions = {
   { 'File outline', 'gO', vim.lsp.buf.document_symbol, cmd = 'outline' },
   { 'Format file', false, 'Format', cmd = 'format' },
   { 'Install language server', false, 'Install', cmd = 'install' },
+  { 'Update language servers', false, 'UpdateServers' },
   { 'Show problems', '<leader>d', palette.problems, cmd = 'problems' },
   { 'Next problem', ']d', function() vim.diagnostic.jump({ count = 1 }) end },
   { 'Comment line', 'gcc', 'normal gcc' },

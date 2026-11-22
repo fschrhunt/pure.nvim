@@ -10,5 +10,5 @@ return {
       disableTaggedHints = true,
     },
   },
-  install = 'brew install basedpyright',
+  install = { npm = { 'basedpyright' }, bin = 'basedpyright-langserver' },
 }
