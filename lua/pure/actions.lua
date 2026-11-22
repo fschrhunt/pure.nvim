@@ -23,6 +23,35 @@ local function press(keys)
 end
 local go_back, go_forward = press('<C-o>'), press('<C-i>')
 
+-- Open files first, most recently used first, then the file history. The
+-- history alone misses files opened in this session: Neovim saves it on exit.
+local function recent_files()
+  local seen, files = { [vim.api.nvim_buf_get_name(0)] = true }, {}
+  local function add(path)
+    if path ~= '' and not seen[path] and vim.fn.filereadable(path) == 1 then
+      seen[path] = true
+      table.insert(files, vim.fn.fnamemodify(path, ':~:.'))
+    end
+  end
+  local open = vim.fn.getbufinfo({ buflisted = 1 })
+  table.sort(open, function(a, b) return a.lastused > b.lastused end)
+  for _, buf in ipairs(open) do
+    add(buf.name)
+  end
+  for _, path in ipairs(vim.v.oldfiles) do
+    add(vim.fs.normalize(path))
+  end
+  MiniPick.start({
+    source = {
+      name = 'Recent files',
+      items = files,
+      show = function(buf, items, query)
+        MiniPick.default_show(buf, items, query, { show_icons = true })
+      end,
+    },
+  })
+end
+
 local function open_terminal()
   vim.cmd('botright split | terminal')
   vim.cmd.startinsert()
@@ -46,8 +75,7 @@ local actions = {
   { 'Go forward', '<leader>]', go_forward },
   -- Files
   { 'Find a file', '<leader>f', MiniPick.builtin.files },
-  { 'Recent files', '<leader>r', MiniExtra.pickers.oldfiles },
-  { 'Open files', false, MiniPick.builtin.buffers },
+  { 'Recent files', '<leader>r', recent_files },
   { 'Search text in project', '<leader>/', MiniPick.builtin.grep_live },
   { 'Browse folder', '<leader>e', browse_folder },
   { 'New file', false, 'enew' },

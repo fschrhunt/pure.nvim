@@ -37,6 +37,9 @@ keep each change to what it needs.
   mapped from that list; don't map them elsewhere.
 - Colors come only from the palette table in `colors/pure.lua`. The scheme never sets `Normal`'s
   background.
-- Don't change Neovim's built-in keys; they're listed in the palette instead.
+- Don't change Neovim's built-in keys; they're listed in the palette instead. The one exception is
+  `j` and `k`, which move through wrapped lines the way they look.
+- One key per action. Turn off plugin keys that duplicate another key or aren't documented in
+  `docs/keys.md`.
 - Name autocommand groups `pure.<module>`.
 - Update `docs/` and the README in the same change as the behavior they describe.

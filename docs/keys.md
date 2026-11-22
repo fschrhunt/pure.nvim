@@ -14,7 +14,7 @@ key.
 | `Space f` | Find a file |
 | `Space /` | Search text in the project |
 | `Space e` | Browse the current file's folder |
-| `Space r` | Recent files |
+| `Space r` | Recent files: open files first, then the ones you had open before |
 | `Space d` | Show problems |
 | `Space w` | Save |
 | `Space q` | Close the file (asks before discarding changes) |
@@ -25,7 +25,7 @@ key.
 | `Space [` | Go back to where you were, across files |
 | `Space ]` | Go forward again |
 
-Palette only: open files, new file, save all, copy file path, open a terminal, format the file,
+Palette only: new file, save all, copy file path, open a terminal, format the file,
 git changes, undo history, compare files, toggles for wrap, line numbers and spell check, edit the
 config, update plugins, and restart or quit Neovim.
 
@@ -84,7 +84,7 @@ The picker is the centered window behind `Space f`, `/`, `r`, `d`, `?` and the p
 | Key | Does |
 | --- | --- |
 | Type | Narrow the list (fuzzy) |
-| `↑` `↓` or `Ctrl-p` `Ctrl-n` | Move |
+| `↑` `↓` | Move |
 | `Enter` | Open or run |
 | `Ctrl-v` / `Ctrl-s` | Open in a split right / below |
 | `Tab` | Show or hide a preview |
@@ -99,7 +99,7 @@ the right. The columns grow with the window: the current folder takes about a th
 | --- | --- |
 | `]` / `[` | Forward into a folder / back out of it |
 | `Enter` | Open the file full screen |
-| `q` | Close |
+| `Esc` | Close |
 | `=` | Apply edits: rename by editing a name, create by adding a line, delete by removing one |
 | `g?` | Show every explorer key |
 

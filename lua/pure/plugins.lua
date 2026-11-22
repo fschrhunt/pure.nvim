@@ -27,8 +27,27 @@ vim.pack.add({
 require('mini.icons').setup()
 require('mini.extra').setup()
 
--- One centered picker for files, search, recent files and the palette.
+-- One centered picker for files, search, recent files and the palette. Its
+-- keys are the arrows, Enter, Esc, Tab (preview), and Ctrl-v / Ctrl-s (open in
+-- a split) plus the usual text editing; the rest of mini.pick's keys are off.
 require('mini.pick').setup({
+  mappings = {
+    choose_in_tabpage = '',
+    choose_marked = '',
+    mark = '',
+    mark_all = '',
+    move_down = '',
+    move_start = '',
+    move_up = '',
+    paste = '',
+    refine = '',
+    refine_marked = '',
+    scroll_down = '',
+    scroll_left = '',
+    scroll_right = '',
+    scroll_up = '',
+    toggle_info = '',
+  },
   window = {
     config = function()
       local height = math.floor(0.6 * vim.o.lines)
@@ -46,9 +65,22 @@ require('mini.pick').setup({
 vim.ui.select = MiniPick.ui_select -- every "pick one" list uses the picker
 
 -- Folders side by side, with a preview of the file under the cursor:
--- [ goes back a folder, ] goes forward, Enter opens the file full screen.
+-- [ goes back a folder, ] goes forward, Enter opens the file full screen,
+-- = applies edits, Esc closes, g? lists these. Its other keys are off.
 require('mini.files').setup({
-  mappings = { go_out = '[', go_in = ']', go_out_plus = '', go_in_plus = '<CR>' },
+  mappings = {
+    close = '<Esc>',
+    go_in = ']',
+    go_in_plus = '<CR>',
+    go_out = '[',
+    go_out_plus = '',
+    mark_goto = '',
+    mark_set = '',
+    reset = '',
+    reveal_cwd = '',
+    trim_left = '',
+    trim_right = '',
+  },
   options = { permanent_delete = false }, -- deleted files go to a trash folder
   windows = { preview = true },
 })
@@ -88,7 +120,10 @@ vim.api.nvim_create_autocmd('User', {
 })
 
 -- Changed lines get colored line numbers; ]h and [h jump between changes.
-require('mini.diff').setup()
+-- Its staging keys (gh, gH) and first/last jumps ([H, ]H) are off.
+require('mini.diff').setup({
+  mappings = { apply = '', reset = '', textobject = '', goto_first = '', goto_last = '' },
+})
 
 -- Press Space and pause: a small window lists every Space key and its name.
 require('mini.clue').setup({
