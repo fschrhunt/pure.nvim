@@ -37,3 +37,6 @@
   Messages appear as toasts in the corner. Python formats with ruff when it's installed.
 - Give floating panels a solid surface with padding instead of an outline: the palette, pickers,
   completion, key hints, and toasts. Code and the file explorer stay on the terminal background.
+- Replace mini.pick and mini.extra with a small picker of our own: a prompt panel and a list
+  panel with a "matches - total" counter, used for files, recent files, text search, problems,
+  help, git changes, the palette, and Neovim's own menus.

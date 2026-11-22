@@ -153,15 +153,13 @@ local groups = {
   MiniIconsRed = { fg = c.coral },
   MiniIconsYellow = { fg = c.yellow },
 
-  -- Picker (mini.pick) and file explorer (mini.files)
-  MiniPickMatchCurrent = { bg = c.shade, bold = true },
-  MiniPickMatchRanges = { fg = c.blue, bold = true },
-  MiniPickPrompt = { fg = c.text, bg = c.surface },
-  MiniPickPromptPrefix = { fg = c.purple, bg = c.surface },
-  MiniPickBorderText = { fg = c.muted, bg = c.surface },
-  MiniPickHeader = { fg = c.muted },
-  MiniPickPreviewLine = { bg = c.shade },
-  PurePaletteHint = { fg = c.muted }, -- keys and commands in the command palette
+  -- Picker (pure.picker)
+  PurePickerPrefix = { fg = c.purple },
+  PurePickerMatch = { fg = c.blue, bold = true },
+  PurePickerCurrent = { bg = c.shade },
+  PurePickerCounter = { fg = c.muted, bg = c.surface },
+  PurePickerHint = { fg = c.muted }, -- keys and commands in the command palette
+
   -- The explorer's columns stay transparent, like windows rather than panels.
   MiniFilesNormal = { fg = c.text },
   MiniFilesBorder = { fg = c.faint },

@@ -79,7 +79,8 @@ fields) and `Enter` accepts one, which also adds any import it needs.
 
 ## In the picker
 
-The picker is the centered window behind `Space f`, `/`, `r`, `d`, `?` and the palette.
+The picker is the panel behind `Space f`, `/`, `r`, `d`, `?`, the palette, and Neovim's own
+"pick one" menus, like code actions. The counter in its corner reads matches - total.
 
 | Key | Does |
 | --- | --- |
@@ -87,7 +88,6 @@ The picker is the centered window behind `Space f`, `/`, `r`, `d`, `?` and the p
 | `↑` `↓` | Move |
 | `Enter` | Open or run |
 | `Ctrl-v` / `Ctrl-s` | Open in a split right / below |
-| `Tab` | Show or hide a preview |
 | `Esc` | Close |
 
 ## In the file explorer

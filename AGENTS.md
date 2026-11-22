@@ -26,6 +26,8 @@ keep each change to what it needs.
 - `lsp/`: one file per language, named after it (`go.lua`, `python.lua`), with its server's
   command, file types, settings, and `install` command.
 - `lua/pure/actions.lua`: every action, its Space key, and the command palette.
+- `lua/pure/picker.lua`: the fuzzy picker and its sources (files, recent files, text search,
+  problems, help, git changes), and `vim.ui.select`.
 - `colors/pure.lua`: the color scheme.
 - `docs/`: user docs, one file per topic: keys, commands, languages, colors, and plugins.
 - `nvim-pack-lock.json`: plugin revisions, written by `vim.pack`. Don't edit it by hand; run
