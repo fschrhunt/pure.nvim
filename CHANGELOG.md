@@ -20,10 +20,11 @@
 - Install language servers into pure's own folder, with no package manager: from their releases
   (every download checked against a published or pinned SHA-256), npm (with a downloaded Node.js
   if needed), or the language's own tool where that's the only way they ship. Java-based servers
-  get a downloaded Java runtime when yours is missing or too old. One toast asks about a file's
-  missing servers, then shows the install's progress and result. A missing server is offered in a toast
-  with Yes and No buttons; `:install <language>` installs or updates one by name; newer versions
-  are offered weekly. Prose gets spelling and grammar checking.
+  get a downloaded Java runtime when yours is missing or too old. One toast with Yes and No
+  buttons asks about a file's missing servers, then shows the install's progress and result.
+  `:install <language>` installs or updates one by name, and newer versions are offered weekly.
+  Prose gets spelling and grammar checking. `./x servers`, also run weekly, checks that every
+  recipe still finds its download.
 - Highlight and fold every language nvim-treesitter supports, building each parser the first time
   its language is opened.
 - Show messages as toasts in the bottom-right corner, and use Neovim 0.12's undo history and file

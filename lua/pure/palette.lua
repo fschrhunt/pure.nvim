@@ -88,6 +88,9 @@ function M.open(opts)
 
   local items, matches, current, top, loading = {}, {}, 1, 1, true
   local live_cancel, timer = nil, vim.uv.new_timer()
+  -- shown: the query the list was last filtered for. pending: how to open the
+  -- pick when Enter came before the list caught up with the typing.
+  local shown, pending, choose
 
   local function query() return vim.api.nvim_buf_get_lines(prompt_buf, 0, 1, false)[1] or '' end
 
@@ -159,13 +162,18 @@ function M.open(opts)
       loading = q ~= ''
       live_cancel = opts.live(q, function(result)
         if q == query() then
-          items, matches, loading = result, {}, false
+          items, matches, loading, shown = result, {}, false, q
           for _, item in ipairs(result) do
             table.insert(matches, { item = item, positions = occurrences(item.text, q) })
           end
           render()
+          if pending then
+            choose(pending)
+          end
         end
       end)
+      render()
+      return
     elseif q == '' then
       matches = vim.tbl_map(function(item) return { item = item } end, items)
     else
@@ -181,7 +189,11 @@ function M.open(opts)
         table.insert(matches, { item = table.remove(by_text[text], 1), positions = positions[i] })
       end
     end
+    shown = not loading and q or nil
     render()
+    if pending and shown then
+      choose(pending)
+    end
   end
 
   local closed = false
@@ -213,7 +225,17 @@ function M.open(opts)
     end
   end
 
-  local function choose(how)
+  function choose(how)
+    -- Typed faster than the list updates (or pasted): pick from the list for
+    -- what's actually in the prompt, once it's ready.
+    if loading or shown ~= query() then
+      pending = how
+      if not loading and not opts.live then
+        filter()
+      end
+      return
+    end
+    pending = nil
     local match = matches[current]
     if not match then
       return cancel()
@@ -315,6 +337,8 @@ function M.recent()
   M.open({ title = 'Recent files', items = items })
 end
 
+-- Searches the project for the typed text as is (not a pattern), ignoring
+-- case unless it has a capital.
 function M.search()
   M.open({
     title = 'Search text in project',
@@ -323,7 +347,7 @@ function M.search()
         return done({})
       end
       return rg(
-        { '--vimgrep', '--smart-case', '--max-columns', '200', '--', query },
+        { '--vimgrep', '--fixed-strings', '--smart-case', '--max-columns', '200', '--', query },
         function(lines)
           local items = {}
           for i, line in ipairs(lines) do

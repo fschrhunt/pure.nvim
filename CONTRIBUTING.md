@@ -8,6 +8,7 @@ tree-sitter CLI with a C compiler.
 ./x hooks   # once per clone
 ./x check   # formatting, ShellCheck, and a headless load of the config; CI runs the same checks
 ./x install # link ~/.config/nvim to this checkout
+./x servers # check that every language server recipe still finds a checksummed download
 ```
 
 `./x` defaults to `check`; run `./x help` for the other commands. See [AGENTS.md](AGENTS.md) for
@@ -22,7 +23,8 @@ operating system, terminal, `nvim --version`, what you did, and what happened.
 Plugins are pinned in `nvim-pack-lock.json`. The [Dependencies workflow](.github/workflows/dependencies.yml)
 runs `./x update` weekly and keeps one `deps/plugins` pull request open with a compare link for
 each changed plugin. Run `./x update` to do the same locally, and `./x sync` after pulling a
-lockfile change to install the recorded versions. Dependabot opens one weekly pull request for
+lockfile change to install the recorded versions. The same workflow runs `./x servers`, so a
+language server whose project renames its release files fails there first; fix its `lsp/` recipe. Dependabot opens one weekly pull request for
 GitHub Actions updates. Review changes and required checks before merging.
 
 ## Releases

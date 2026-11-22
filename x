@@ -11,6 +11,7 @@ usage: ./x [command]
   update    Update plugins and nvim-pack-lock.json
   sync      Install the plugin versions in nvim-pack-lock.json
   install   Link ~/.config/nvim to this checkout
+  servers   Check that every language server recipe still finds a checksummed download
   hooks     Install the repository's Git hook
   help      Show this help
 USAGE
@@ -37,6 +38,18 @@ case "${1-check}" in
         ;;
     fmt)
         stylua .
+        ;;
+    servers)
+        # GitHub allows few anonymous API calls; use your gh login if you have one.
+        if [ -z "${GITHUB_TOKEN-}" ] && command -v gh >/dev/null 2>&1; then
+            GITHUB_TOKEN=$(gh auth token 2>/dev/null || true)
+            export GITHUB_TOKEN
+        fi
+        nvim_here +'lua require("pure.servers").check(function(problems)
+            for _, problem in ipairs(problems) do io.stderr:write(problem, "\n") end
+            vim.cmd(#problems == 0 and "qa" or "cquit")
+          end)'
+        echo 'Every language server recipe finds its download'
         ;;
     update)
         nvim_here +'lua vim.pack.update(nil, { force = true })' +qa

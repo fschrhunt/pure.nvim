@@ -12,6 +12,7 @@ keep each change to what it needs.
 ./x update    # update plugins and nvim-pack-lock.json
 ./x sync      # install the plugin versions in nvim-pack-lock.json
 ./x install   # link ~/.config/nvim to this checkout
+./x servers   # check that every language server recipe still finds a checksummed download
 ./x hooks     # install the pre-commit hook once per clone
 ```
 
@@ -38,7 +39,8 @@ keep each change to what it needs.
 - `docs/`: user docs, one file per topic: keys, commands, languages, colors, and plugins.
 - `nvim-pack-lock.json`: plugin revisions, written by `vim.pack`. Don't edit it by hand; run
   `./x update`.
-- `.github/workflows/`: CI, releases, and weekly plugin updates (`dependencies.yml`).
+- `.github/workflows/`: CI, releases, and weekly upkeep (`dependencies.yml`): plugin updates and
+  the language server recipe check.
 - `.github/release/`: the release helper and the checks every release must pass.
 
 ## Conventions

@@ -6,7 +6,13 @@ return {
   root_markers = { 'pyproject.toml', 'pyrightconfig.json', 'setup.py', 'requirements.txt', '.git' },
   settings = {
     basedpyright = {
-      analysis = { autoSearchPaths = true, diagnosticMode = 'openFilesOnly' },
+      -- standard, like most Python editors, rather than basedpyright's strict
+      -- default; a project's own config (pyproject.toml) still wins.
+      analysis = {
+        autoSearchPaths = true,
+        diagnosticMode = 'openFilesOnly',
+        typeCheckingMode = 'standard',
+      },
       disableTaggedHints = true,
     },
   },

@@ -76,6 +76,11 @@ vim.api.nvim_create_autocmd('FileType', {
   group = group,
   desc = 'Offer to install missing language servers',
   callback = function(args)
+    -- Only files being edited count; previews (like the explorer's) and
+    -- scratch buffers don't.
+    if vim.bo[args.buf].buftype ~= '' or not vim.bo[args.buf].buflisted then
+      return
+    end
     local names = vim.tbl_filter(function(name) return not asked[name] end, missing_for(args.match))
     if #names == 0 then
       return

@@ -26,7 +26,8 @@
 -- by a coding agent is used like an installed one.
 --
 -- M.install(name, done) installs or updates one; M.installed() lists them;
--- M.check_updates() asks about newer versions at most once a week.
+-- M.check_updates() asks about newer versions at most once a week; M.check()
+-- makes sure every recipe still finds its download.
 
 local M = {}
 
@@ -67,7 +68,15 @@ local function run(cmd, opts)
   return result.stdout, result.stderr
 end
 
-local function fetch_json(url) return vim.json.decode((run({ 'curl', '-fsSL', url }))) end
+-- GitHub allows few anonymous API calls an hour; a GITHUB_TOKEN, when set
+-- (as in CI), raises that.
+local function fetch_json(url)
+  local curl = { 'curl', '-fsSL', url }
+  if vim.env.GITHUB_TOKEN and url:match('^https://api%.github%.com/') then
+    vim.list_extend(curl, { '-H', 'Authorization: Bearer ' .. vim.env.GITHUB_TOKEN })
+  end
+  return vim.json.decode((run(curl)))
+end
 
 local function sha256(file)
   local command = vim.fn.executable('sha256sum') == 1 and { 'sha256sum', file }
@@ -118,8 +127,19 @@ local function link(command, program, env)
   vim.uv.fs_chmod(launcher, tonumber('755', 8))
 end
 
+-- A repository's latest release, remembered for ten minutes so a check or a
+-- run of installs asks GitHub once per repository.
+local releases = {}
 local function latest_release(repo)
-  return fetch_json('https://api.github.com/repos/' .. repo .. '/releases/latest')
+  local cached = releases[repo]
+  if not cached or os.time() - cached.time > 600 then
+    cached = {
+      time = os.time(),
+      release = fetch_json('https://api.github.com/repos/' .. repo .. '/releases/latest'),
+    }
+    releases[repo] = cached
+  end
+  return cached.release
 end
 
 -- A release's version: its tag without a prefix like v or name/v.
@@ -183,6 +203,47 @@ local function node_dir()
   return vim.fs.joinpath(dir, 'bin')
 end
 
+-- Finds a release download for system (like mac-arm64) without fetching it.
+-- Returns its url, its expected SHA-256, the version, and a function that
+-- fills {version} and {file} in a recipe template. Errors when there's no
+-- download for system or no checksum to check it against.
+local function locate(recipe, command, system)
+  local file_name = recipe.files and recipe.files[system]
+  if recipe.files and not file_name then
+    error(('%s has no download for %s.'):format(command, system), 0)
+  end
+  local release = recipe.github and latest_release(recipe.github)
+  local version = release and version_of(release) or recipe.version or 'latest'
+  if recipe.latest then
+    file_name = vim.trim(run({ 'curl', '-fsSL', recipe.latest }))
+    version = file_name:match('%d+%.%d+%.%d+') or file_name
+  end
+  local function fill(template)
+    return (template:gsub('{version}', version):gsub('{file}', file_name or ''))
+  end
+
+  local url, expected
+  if recipe.url then
+    url = fill(recipe.url)
+    expected = recipe.sha256
+      or recipe.sums
+        and sum_for(run({ 'curl', '-fsSL', fill(recipe.sums) }), vim.fs.basename(url))
+  else
+    local asset = vim.iter(release.assets):find(function(a) return a.name == fill(file_name) end)
+    if not asset then
+      error(('%s %s has no file %s.'):format(command, version, fill(file_name)), 0)
+    end
+    -- GitHub sends a missing digest as JSON null (vim.NIL).
+    local digest = type(asset.digest) == 'string' and asset.digest:match('^sha256:(%x+)')
+    url, expected = asset.browser_download_url, digest or nil
+  end
+
+  if not expected then
+    error(("%s has no published checksum, so pure won't install it unchecked."):format(command), 0)
+  end
+  return url, expected, version, fill
+end
+
 -- Installs one server from its recipe; returns the installed version.
 local function install(name, config)
   local recipe, command = config.install, config.cmd[1]
@@ -238,40 +299,7 @@ local function install(name, config)
     )
   end
 
-  -- A release download: from GitHub, from a URL versioned by GitHub, or pinned.
-  local file_name = recipe.files and recipe.files[platform]
-  if recipe.files and not file_name then
-    error(('%s has no download for %s.'):format(command, platform), 0)
-  end
-  local release = recipe.github and latest_release(recipe.github)
-  local version = release and version_of(release) or recipe.version or 'latest'
-  if recipe.latest then
-    file_name = vim.trim(run({ 'curl', '-fsSL', recipe.latest }))
-    version = file_name:match('%d+%.%d+%.%d+') or file_name
-  end
-  local function fill(template)
-    return (template:gsub('{version}', version):gsub('{file}', file_name or ''))
-  end
-
-  local url, expected
-  if recipe.url then
-    url = fill(recipe.url)
-    expected = recipe.sha256
-      or recipe.sums
-        and sum_for(run({ 'curl', '-fsSL', fill(recipe.sums) }), vim.fs.basename(url))
-  else
-    local asset = vim.iter(release.assets):find(function(a) return a.name == fill(file_name) end)
-    if not asset then
-      error(('%s %s has no file %s.'):format(command, version, fill(file_name)), 0)
-    end
-    -- GitHub sends a missing digest as JSON null (vim.NIL).
-    local digest = type(asset.digest) == 'string' and asset.digest:match('^sha256:(%x+)')
-    url, expected = asset.browser_download_url, digest or nil
-  end
-
-  if not expected then
-    error(("%s has no published checksum, so pure won't install it unchecked."):format(command), 0)
-  end
+  local url, expected, version, fill = locate(recipe, command, platform)
   local folder = vim.fs.joinpath(M.dir, name)
   local file = vim.fs.joinpath(vim.fn.tempname(), vim.fs.basename(url))
   vim.fn.mkdir(vim.fs.dirname(file), 'p')
@@ -298,6 +326,33 @@ function M.install(name, done)
 end
 
 function M.installed() return read_record().servers end
+
+-- Checks that every download recipe still finds a file with a checksum on
+-- every system it lists, without downloading anything. Calls done(problems),
+-- a list of messages, empty when all is well. For `./x servers`.
+function M.check(done)
+  coroutine.wrap(function()
+    local problems = {}
+    for _, file in ipairs(vim.api.nvim_get_runtime_file('lsp/*.lua', true)) do
+      local name = vim.fn.fnamemodify(file, ':t:r')
+      local config = vim.lsp.config[name]
+      local recipe = config.install or {}
+      if recipe.github or recipe.url or recipe.latest then
+        for _, system in ipairs(recipe.files and vim.tbl_keys(recipe.files) or { platform }) do
+          local ok, url = pcall(locate, recipe, config.cmd[1], system)
+          if ok and recipe.sha256 then
+            -- A pinned download has no listing to look it up in; ask for it.
+            ok, url = pcall(run, { 'curl', '-fsSIL', '-o', '/dev/null', url })
+          end
+          if not ok then
+            table.insert(problems, ('%s (%s): %s'):format(name, system, url))
+          end
+        end
+      end
+    end
+    done(problems)
+  end)()
+end
 
 -- The newest version a recipe can tell, without installing anything.
 local function latest_version(recipe)

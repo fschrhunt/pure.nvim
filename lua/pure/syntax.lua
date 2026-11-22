@@ -33,6 +33,9 @@ vim.api.nvim_create_autocmd('FileType', {
     treesitter.install(lang):await(function(err)
       if not err then
         vim.schedule(function()
+          -- Neovim caches where runtime files are; on a first launch that
+          -- cache predates the parser folder. Setting the path refreshes it.
+          vim.o.runtimepath = vim.o.runtimepath
           if vim.api.nvim_buf_is_valid(buf) then
             start(buf, lang)
           end

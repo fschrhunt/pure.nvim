@@ -13,7 +13,8 @@ Press `Space p` for the command palette, which lists every action with its key.
 
 pure.nvim needs Neovim 0.12 or newer, Git, [ripgrep](https://github.com/BurntSushi/ripgrep), the
 [tree-sitter CLI](https://github.com/tree-sitter/tree-sitter) with a C compiler, and a
-[Nerd Font](https://www.nerdfonts.com) for file icons. On macOS:
+[Nerd Font](https://www.nerdfonts.com) for file icons. Installing language servers uses `curl`,
+`tar`, and `unzip`, which most systems already have. On macOS:
 
 ```sh
 brew install neovim ripgrep tree-sitter
@@ -21,6 +22,10 @@ brew install --cask font-meslo-lg-nerd-font
 git clone https://github.com/fschrhunt/pure.nvim ~/dev/pure.nvim
 ~/dev/pure.nvim/x install
 ```
+
+On Linux, install the same with your package manager (Neovim 0.12 may need to come from
+[its releases](https://github.com/neovim/neovim/releases) if yours is older), set your terminal
+to a Nerd Font, and run the same two Git and `./x` lines.
 
 `./x install` links `~/.config/nvim` to the checkout and refuses to replace an existing config.
 The first launch installs the plugins at the versions in `nvim-pack-lock.json` and builds the

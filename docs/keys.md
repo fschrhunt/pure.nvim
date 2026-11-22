@@ -12,7 +12,7 @@ key. Everyday actions are also [commands](commands.md), like `:back` and `:find`
 | --- | --- |
 | `Space p` | Command palette: every action, with its key |
 | `Space f` | Find a file |
-| `Space /` | Search text in the project |
+| `Space /` | Search text in the project, exactly as typed; capitals make it match case |
 | `Space r` | Recent files: open files first, then the ones you had open before |
 | `Space d` | Show problems |
 | `Space w` | Save |
