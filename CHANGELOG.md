@@ -18,3 +18,6 @@
   and conform.nvim, leaving mini.nvim and nvim-treesitter as the only plugins.
 - Add docs for keys, languages, colors, and plugins, and `./x sync` to install the plugin
   versions recorded in the lockfile.
+- Go back and forward with `Space [` and `Space ]`, and through folders in the file explorer with
+  `[` and `]`. Each action has one key: the explorer's `h` and `l` and the `:W` and `:Q` typo
+  commands are gone.

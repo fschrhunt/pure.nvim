@@ -22,6 +22,8 @@ key.
 | `Space +` | Split right |
 | `Space x` | Close the window |
 | `Space ?` | Search Neovim's help |
+| `Space [` | Go back to where you were, across files |
+| `Space ]` | Go forward again |
 
 Palette only: open files, new file, save all, copy file path, open a terminal, format the file,
 git changes, undo history, compare files, toggles for wrap, line numbers and spell check, edit the
@@ -29,9 +31,11 @@ config, update plugins, and restart or quit Neovim.
 
 ## Getting around
 
+`Space [` and `Space ]` are the back and forward buttons: they step through the places you've
+jumped to, like opening a file, searching, or going to a definition.
+
 | Key | Does |
 | --- | --- |
-| `Ctrl-o` / `Ctrl-i` | Back / forward to where you were, across files |
 | `gg` / `G` | Top / bottom of the file |
 | `Ctrl-d` / `Ctrl-u` | Half a page down / up |
 | `%` | Jump to the matching bracket |
@@ -93,7 +97,7 @@ the right. The columns grow with the window: the current folder takes about a th
 
 | Key | Does |
 | --- | --- |
-| `]` / `[` | Forward into a folder / back out of it (`l` / `h` also work) |
+| `]` / `[` | Forward into a folder / back out of it |
 | `Enter` | Open the file full screen |
 | `q` | Close |
 | `=` | Apply edits: rename by editing a name, create by adding a line, delete by removing one |

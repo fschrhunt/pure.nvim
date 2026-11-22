@@ -47,9 +47,10 @@ in the command palette, along with Neovim's own code keys.
 | `Space e` | Browse folder | `Space -` | Split below |
 | `Space r` | Recent files | `Space +` | Split right |
 | `Space ?` | Search help | `Space x` | Close window |
+| `Space [` | Go back | `Space ]` | Go forward |
 
-`Ctrl-o` steps back to where you were. In the file explorer, `[` goes back a folder, `]` goes
-forward, and `Enter` opens a file. [All keys](docs/keys.md)
+`Space [` and `Space ]` go back and forward through where you've been, across files. In the file
+explorer, `[` and `]` go back and forward through folders. [All keys](docs/keys.md)
 
 ## Docs
 
