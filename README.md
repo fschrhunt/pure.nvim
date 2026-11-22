@@ -26,7 +26,8 @@ git clone https://github.com/fschrhunt/pure.nvim ~/dev/pure.nvim
 The first launch installs the plugins at the versions in `nvim-pack-lock.json` and builds the
 tree-sitter parsers in the background.
 
-Language servers are separate programs. pure.nvim starts the ones it finds:
+Language servers are separate programs. pure.nvim starts the ones it finds; see
+[languages](docs/languages.md) for what each one does:
 
 ```sh
 brew install gopls typescript-language-server basedpyright ruff lua-language-server bash-language-server
@@ -48,24 +49,17 @@ in the command palette, along with Neovim's own code keys.
 | `Space ?` | Search help | `Space x` | Close window |
 
 `Ctrl-o` steps back to where you were. In the file explorer, `h` backs out of a folder, `l` goes
-in, and `Enter` opens a file.
+in, and `Enter` opens a file. [All keys](docs/keys.md)
 
-## Code
+## Docs
 
-Each language server brings errors as you type, go to definition (`Ctrl-]`), docs (`K`), rename
-(`grn`), and code actions (`gra`). Suggestions appear while you type: `Tab` moves through them and
-`Enter` accepts. Files are formatted on save, with Prettier in projects that configure it and the
-language server's formatter everywhere else.
+- [Keys](docs/keys.md): every key worth knowing, in the editor, the picker, and the file explorer.
+- [Languages](docs/languages.md): what each language gets, formatting, and adding a language.
+- [Colors](docs/colors.md): the palette, what it colors, and how to change it.
+- [Plugins](docs/plugins.md): the two plugins, their versions, and updating them.
 
-Configured languages: Go, TypeScript and JavaScript, Astro, Python, Lua, and shell.
-
-## Make it yours
-
-- Add an action with one line in `lua/pure/actions.lua`. It shows up in the palette and gets its
-  key there.
-- Change a color once in the palette table at the top of `colors/pure.lua`.
-- Add a language with its parser in `lua/pure/syntax.lua`, a short `lsp/<server>.lua` file, and
-  the server's name in `lua/pure/code.lua`.
+To add an action of your own, add one line to the list in `lua/pure/actions.lua`. It appears in
+the palette, and gets its key there if you give it one.
 
 ## License
 

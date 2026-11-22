@@ -16,3 +16,5 @@
 - Use Neovim 0.12's experimental message UI, undo history, and file comparison.
 - Configure language servers and formatting in pure.nvim's own files instead of nvim-lspconfig
   and conform.nvim, leaving mini.nvim and nvim-treesitter as the only plugins.
+- Add docs for keys, languages, colors, and plugins, and `./x sync` to install the plugin
+  versions recorded in the lockfile.

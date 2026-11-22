@@ -1,6 +1,7 @@
 -- Plugins: installs the two plugins with Neovim's built-in vim.pack (versions
 -- pinned in nvim-pack-lock.json) and sets up mini.nvim's icons, picker, file
--- explorer and git changes. nvim-treesitter is configured in pure.syntax.
+-- explorer, git changes and Space-key hints. nvim-treesitter is configured in
+-- pure.syntax. See docs/plugins.md.
 
 local group = vim.api.nvim_create_augroup('pure.plugins', {})
 

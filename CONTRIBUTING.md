@@ -11,7 +11,8 @@ tree-sitter CLI with a C compiler.
 ```
 
 `./x` defaults to `check`; run `./x help` for the other commands. See [AGENTS.md](AGENTS.md) for
-where things live and the conventions. Update the README and changelog when behavior changes.
+where things live and the conventions. Update the README, `docs/`, and the changelog when behavior
+changes.
 
 Never include credentials or private file contents in issue reports. For bugs, include the
 operating system, terminal, `nvim --version`, what you did, and what happened.
@@ -20,8 +21,9 @@ operating system, terminal, `nvim --version`, what you did, and what happened.
 
 Plugins are pinned in `nvim-pack-lock.json`. The [Dependencies workflow](.github/workflows/dependencies.yml)
 runs `./x update` weekly and keeps one `deps/plugins` pull request open with a compare link for
-each changed plugin. Run `./x update` to do the same locally. Dependabot opens one weekly pull
-request for GitHub Actions updates. Review changes and required checks before merging.
+each changed plugin. Run `./x update` to do the same locally, and `./x sync` after pulling a
+lockfile change to install the recorded versions. Dependabot opens one weekly pull request for
+GitHub Actions updates. Review changes and required checks before merging.
 
 ## Releases
 
