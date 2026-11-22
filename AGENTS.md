@@ -21,14 +21,14 @@ keep each change to what it needs.
 - `lua/pure/options.lua`: options, clipboard, and automatic behavior.
 - `lua/pure/plugins.lua`: the two plugins for `vim.pack` and mini.nvim setup.
 - `lua/pure/syntax.lua`: tree-sitter highlighting and folding, building parsers on first use.
-- `lua/pure/code.lua`: starting installed servers, suggesting missing ones, diagnostics,
+- `lua/pure/languages.lua`: starting installed servers, offering missing ones, diagnostics,
   completion, and formatting.
 - `lsp/`: one file per language, named after it (`go.lua`, `python.lua`), with its server's
   command, file types, settings, and `install` command.
 - `lua/pure/actions.lua`: every action, its Space key, and the command palette.
 - `lua/pure/places.lua`: the browser-style back and forward history of files and folders.
 - `lua/pure/toast.lua`: yes-or-no toasts with buttons.
-- `lua/pure/picker.lua`: the fuzzy picker and its sources (files, recent files, text search,
+- `lua/pure/palette.lua`: the fuzzy palette and its sources (files, recent files, text search,
   problems, help, git changes), and `vim.ui.select`.
 - `colors/pure.lua`: the color scheme.
 - `docs/`: user docs, one file per topic: keys, commands, languages, colors, and plugins.
@@ -39,13 +39,13 @@ keep each change to what it needs.
 
 ## Conventions
 
-- Every user-facing action goes in the `actions` list so it reaches the palette. Space keys and
+- Every user-facing action goes in the `actions` list so it reaches the command palette. Space keys and
   plain-word commands are made from that list; don't define them elsewhere. The exception is
   `Space y` / `Space n`, which exist only while a toast is asking. A command word must
   not shadow a Neovim command unless `docs/commands.md` lists it as replaced.
-- Colors come only from the palette table in `colors/pure.lua`. The scheme never sets `Normal`'s
+- Colors come only from the color table in `colors/pure.lua`. The scheme never sets `Normal`'s
   background.
-- Don't change Neovim's built-in keys; they're listed in the palette instead. The one exception is
+- Don't change Neovim's built-in keys; they're listed in the command palette instead. The one exception is
   `j` and `k`, which move through wrapped lines the way they look.
 - One key per action. Turn off plugin keys that duplicate another key or aren't documented in
   `docs/keys.md`.

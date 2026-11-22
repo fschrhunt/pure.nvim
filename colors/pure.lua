@@ -1,8 +1,8 @@
 -- pure: a soft, dark color scheme with a transparent background.
 --
--- Every color comes from the palette below, so the editor looks the same in
+-- Every color comes from the color table below, so the editor looks the same in
 -- any terminal. Code sits on the terminal's own background; floating panels
--- (palette, pickers, key hints, toasts, popups) are solid blocks of a surface
+-- (palettes, key hints, toasts, popups) are solid blocks of a surface
 -- color with a blue bar down the left side and no outline. Code keeps color for what you scan for
 -- (keywords, definitions, types, literals) and leaves calls, variables and
 -- brackets in the plain text color.
@@ -142,7 +142,7 @@ local groups = {
   DiagnosticUnderlineHint = { undercurl = true, sp = c.cyan },
   LspCodeLens = { fg = c.muted },
 
-  -- File icons (mini.icons): each icon color maps onto the palette
+  -- File icons (mini.icons): each icon color maps onto the color table
   MiniIconsAzure = { fg = c.sky },
   MiniIconsBlue = { fg = c.blue },
   MiniIconsCyan = { fg = c.cyan },
@@ -153,12 +153,12 @@ local groups = {
   MiniIconsRed = { fg = c.coral },
   MiniIconsYellow = { fg = c.yellow },
 
-  -- Picker (pure.picker)
-  PurePickerPrefix = { fg = c.purple },
-  PurePickerMatch = { fg = c.blue, bold = true },
-  PurePickerCurrent = { bg = c.shade },
-  PurePickerCounter = { fg = c.muted, bg = c.surface },
-  PurePickerHint = { fg = c.muted }, -- keys and commands in the command palette
+  -- Palettes (pure.palette)
+  PurePalettePrefix = { fg = c.purple },
+  PurePaletteMatch = { fg = c.blue, bold = true },
+  PurePaletteCurrent = { bg = c.shade },
+  PurePaletteCounter = { fg = c.muted, bg = c.surface },
+  PurePaletteHint = { fg = c.muted }, -- keys and commands in the command palette
 
   -- Toasts (pure.toast)
   PureToastTitle = { fg = c.text, bold = true },

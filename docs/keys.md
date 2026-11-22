@@ -89,10 +89,11 @@ It doesn't take the cursor, so you can keep typing, and it closes on its own if 
 
 Panels show the Space key as the spacebar icon `󱁐` (it needs a Nerd Font).
 
-## In the picker
+## In a palette
 
-The picker is the panel behind `Space f`, `/`, `r`, `d`, `?`, the palette, and Neovim's own
-"pick one" menus, like code actions. The counter in its corner reads matches - total.
+Every list you pick from is a palette: the command palette (`Space p`), and the ones behind
+`Space f`, `/`, `r`, `d`, `?`, and Neovim's own "pick one" menus, like code actions. The counter in
+its corner reads matches - total.
 
 | Key | Does |
 | --- | --- |

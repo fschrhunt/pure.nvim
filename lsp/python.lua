@@ -1,5 +1,5 @@
 -- Python: basedpyright for errors, types and navigation. Formatting uses ruff
--- when it's installed (see lua/pure/code.lua).
+-- when it's installed (see lua/pure/languages.lua).
 return {
   cmd = { 'basedpyright-langserver', '--stdio' },
   filetypes = { 'python' },

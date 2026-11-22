@@ -4,7 +4,7 @@
 -- doubles as a cheat sheet. Only everyday actions get a key or a command; the
 -- rest are a palette search away. See docs/keys.md and docs/commands.md.
 
-local picker = require('pure.picker')
+local palette = require('pure.palette')
 local places = require('pure.places')
 
 local function copy_path()
@@ -65,9 +65,9 @@ local actions = {
   { 'Jump back', '<C-o>', press('<C-o>') },
   { 'Jump forward', '<C-i>', press('<C-i>') },
   -- Files
-  { 'Find a file', '<leader>f', picker.files, cmd = 'find' },
-  { 'Recent files', '<leader>r', picker.recent, cmd = 'recent' },
-  { 'Search text in project', '<leader>/', picker.search, cmd = 'search' },
+  { 'Find a file', '<leader>f', palette.files, cmd = 'find' },
+  { 'Recent files', '<leader>r', palette.recent, cmd = 'recent' },
+  { 'Search text in project', '<leader>/', palette.search, cmd = 'search' },
   { 'Browse folder', false, browse_folder, cmd = 'explore' },
   { 'New file', false, 'enew' },
   { 'Save', '<leader>w', 'write' },
@@ -87,12 +87,12 @@ local actions = {
   { 'File outline', 'gO', vim.lsp.buf.document_symbol, cmd = 'outline' },
   { 'Format file', false, 'Format', cmd = 'format' },
   { 'Install language server', false, 'Install', cmd = 'install' },
-  { 'Show problems', '<leader>d', picker.problems, cmd = 'problems' },
+  { 'Show problems', '<leader>d', palette.problems, cmd = 'problems' },
   { 'Next problem', ']d', function() vim.diagnostic.jump({ count = 1 }) end },
   { 'Comment line', 'gcc', 'normal gcc' },
   -- Git
   { 'Show git changes', false, function() MiniDiff.toggle_overlay(0) end },
-  { 'List git changes', false, picker.git_changes },
+  { 'List git changes', false, palette.git_changes },
   { 'Next git change', ']h', function() MiniDiff.goto_hunk('next') end },
   -- View and history
   { 'Undo history', false, undo_history },
@@ -101,7 +101,7 @@ local actions = {
   { 'Toggle line numbers', false, 'set number!' },
   { 'Toggle spell check', false, 'set spell!' },
   -- Neovim
-  { 'Search help', '<leader>?', picker.help },
+  { 'Search help', '<leader>?', palette.help },
   { 'Edit config', false, 'edit $MYVIMRC', cmd = 'config' },
   { 'Update plugins', false, function() vim.pack.update() end },
   { 'Restart Neovim', false, 'restart' },
@@ -138,7 +138,7 @@ end
 local function pad(text, width) return text .. (' '):rep(width - vim.fn.strdisplaywidth(text)) end
 
 local function open_palette()
-  picker.select(actions, {
+  palette.select(actions, {
     prompt = 'Command palette',
     width = name_width + key_width + 14,
     height = math.min(#actions, 16),

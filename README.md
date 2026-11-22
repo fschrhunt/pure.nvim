@@ -3,7 +3,7 @@
 A clean, intuitive Neovim. Built on what Neovim 0.12 ships with, plus two plugins for what it
 can't do alone: [mini.nvim](https://github.com/nvim-mini/mini.nvim) for icons, the file explorer,
 git changes, and key hints, and [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
-for syntax. The picker, language servers, and formatting are its own, in plain files.
+for syntax. Palettes, language servers, and formatting are its own, in plain files.
 
 Nothing on screen but your code. There's no status bar until you split, no file tree, and no
 background color: the `pure` color scheme draws text on whatever background your terminal has.
@@ -52,11 +52,11 @@ commands, like `:back` (`:b`), `:forward` (`:f`), `:find`, and `:close`. [All ke
 
 ## Docs
 
-- [Keys](docs/keys.md): every key worth knowing, in the editor, the picker, and the file explorer.
+- [Keys](docs/keys.md): every key worth knowing, in the editor, palettes, and the file explorer.
 - [Commands](docs/commands.md): plain-word commands like `:back`, `:find`, and `:close`.
 - [Languages](docs/languages.md): the supported languages, installing their servers, formatting,
   and adding a language.
-- [Colors](docs/colors.md): the palette, what it colors, and how to change it.
+- [Colors](docs/colors.md): the color table, what it colors, and how to change it.
 - [Plugins](docs/plugins.md): the two plugins, their versions, and updating them.
 
 To add an action of your own, add one line to the list in `lua/pure/actions.lua`. It appears in
