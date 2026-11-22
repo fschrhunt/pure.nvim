@@ -26,8 +26,8 @@ git clone https://github.com/fschrhunt/pure.nvim ~/dev/pure.nvim
 The first launch installs the plugins at the versions in `nvim-pack-lock.json` and builds the
 tree-sitter parsers in the background.
 
-Language servers aren't installed for you. Open a file, and if its language's server is missing,
-a toast in the corner suggests it; `:install` installs it. See [languages](docs/languages.md) for
+Language servers aren't installed without asking. Open a file whose language server is missing,
+and a toast asks whether to install it: `Space y` for yes, `Space n` for no. See [languages](docs/languages.md) for
 the 25 supported languages.
 
 ## Keys

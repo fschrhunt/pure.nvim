@@ -27,6 +27,7 @@ keep each change to what it needs.
   command, file types, settings, and `install` command.
 - `lua/pure/actions.lua`: every action, its Space key, and the command palette.
 - `lua/pure/places.lua`: the browser-style back and forward history of files and folders.
+- `lua/pure/toast.lua`: yes-or-no toasts with buttons.
 - `lua/pure/picker.lua`: the fuzzy picker and its sources (files, recent files, text search,
   problems, help, git changes), and `vim.ui.select`.
 - `colors/pure.lua`: the color scheme.
@@ -39,7 +40,8 @@ keep each change to what it needs.
 ## Conventions
 
 - Every user-facing action goes in the `actions` list so it reaches the palette. Space keys and
-  plain-word commands are made from that list; don't define them elsewhere. A command word must
+  plain-word commands are made from that list; don't define them elsewhere. The exception is
+  `Space y` / `Space n`, which exist only while a toast is asking. A command word must
   not shadow a Neovim command unless `docs/commands.md` lists it as replaced.
 - Colors come only from the palette table in `colors/pure.lua`. The scheme never sets `Normal`'s
   background.

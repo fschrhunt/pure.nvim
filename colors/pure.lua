@@ -3,7 +3,7 @@
 -- Every color comes from the palette below, so the editor looks the same in
 -- any terminal. Code sits on the terminal's own background; floating panels
 -- (palette, pickers, completion, key hints, toasts) sit on a solid surface
--- with padding instead of an outline. Code keeps color for what you scan for
+-- inside a rounded outline. Code keeps color for what you scan for
 -- (keywords, definitions, types, literals) and leaves calls, variables and
 -- brackets in the plain text color.
 -- Requires 'termguicolors'.
@@ -104,11 +104,11 @@ local groups = {
   TabLineFill = {},
   TabLineSel = { fg = c.text, bold = true },
   NormalFloat = { fg = c.text, bg = c.surface },
-  FloatBorder = { fg = c.surface, bg = c.surface },
+  FloatBorder = { fg = c.faint, bg = c.surface },
   FloatTitle = { fg = c.blue, bg = c.surface, bold = true },
   FloatFooter = { fg = c.muted, bg = c.surface },
   Pmenu = { fg = c.text, bg = c.surface },
-  PmenuBorder = { fg = c.surface, bg = c.surface },
+  PmenuBorder = { fg = c.faint, bg = c.surface },
   PmenuSel = { bg = c.shade, bold = true },
   PmenuMatch = { fg = c.blue, bg = c.surface },
   PmenuMatchSel = { fg = c.blue, bg = c.shade, bold = true },
@@ -159,6 +159,14 @@ local groups = {
   PurePickerCurrent = { bg = c.shade },
   PurePickerCounter = { fg = c.muted, bg = c.surface },
   PurePickerHint = { fg = c.muted }, -- keys and commands in the command palette
+
+  -- Toasts (pure.toast)
+  PureToastTitle = { fg = c.text, bold = true },
+  PureToastMessage = { fg = c.muted },
+  PureToastYes = { fg = c.ink, bg = c.blue, bold = true },
+  PureToastYesKey = { fg = c.shade, bg = c.blue },
+  PureToastNo = { fg = c.text, bg = c.shade },
+  PureToastNoKey = { fg = c.muted, bg = c.shade },
 
   -- The explorer's columns stay transparent, like windows rather than panels.
   MiniFilesNormal = { fg = c.text },

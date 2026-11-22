@@ -2,7 +2,7 @@
 
 `pure` is a soft, dark color scheme. Code sits on whatever background your terminal has, and
 floating panels (the palette, pickers, completion, key hints, and toasts) sit on a solid surface
-with a little padding instead of an outline. It lives in one file, `colors/pure.lua`.
+inside a rounded outline. It lives in one file, `colors/pure.lua`.
 
 ## The palette
 
