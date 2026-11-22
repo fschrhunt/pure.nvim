@@ -11,7 +11,8 @@
   from one list of actions, so each action has one name and at most one key. Pressing Space or `g`
   and pausing lists the keys that can follow.
 - Go back and forward with `Space [` and `Space ]` through the places you've been, files and
-  folders, like a browser. `Space q` closes the split, or the file when there's one window.
+  folders, like a browser. `Space q` closes the split, or the file when there's one window, and
+  `Ctrl-h` `Ctrl-j` `Ctrl-k` `Ctrl-l` move between splits.
 - Add a full-height file explorer with a preview (`:explore`): `[` and `]` move through folders,
   `Enter` opens a file, and edits apply with `=`.
 - Support 25 languages, one file each in `lsp/`, named after the language, with completion

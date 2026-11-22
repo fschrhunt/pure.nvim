@@ -190,3 +190,9 @@ vim.keymap.set('n', '<Esc>', '<Cmd>nohlsearch<CR><Esc>', { desc = 'Clear search 
 -- Move through wrapped lines the way they look on screen.
 vim.keymap.set({ 'n', 'x' }, 'j', [[v:count == 0 ? 'gj' : 'j']], { expr = true })
 vim.keymap.set({ 'n', 'x' }, 'k', [[v:count == 0 ? 'gk' : 'k']], { expr = true })
+
+-- Move between splits with one key instead of Ctrl-w first. These keys only
+-- repeated h, j, k, and redraw (still :redraw).
+for key, desc in pairs({ h = 'left', j = 'below', k = 'above', l = 'right' }) do
+  vim.keymap.set('n', '<C-' .. key .. '>', '<C-w>' .. key, { desc = 'Split ' .. desc })
+end
