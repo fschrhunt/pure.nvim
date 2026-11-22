@@ -43,7 +43,7 @@ in the command palette, along with Neovim's own code keys.
 | `Space /` | Search text in project | `Space q` | Close file |
 | `Space e` | Browse folder | `Space -` | Split below |
 | `Space r` | Recent files | `Space +` | Split right |
-|  |  | `Space x` | Close window |
+| `Space ?` | Search help | `Space x` | Close window |
 
 `Ctrl-o` steps back to where you were. In the file explorer, `h` backs out of a folder, `l` goes
 in, and `Enter` opens a file.

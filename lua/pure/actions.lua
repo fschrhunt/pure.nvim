@@ -70,7 +70,7 @@ local actions = {
   { 'Toggle line numbers', false, 'set number!' },
   { 'Toggle spell check', false, 'set spell!' },
   -- Neovim
-  { 'Search help', false, MiniPick.builtin.help },
+  { 'Search help', '<leader>?', MiniPick.builtin.help },
   { 'Edit config', false, 'edit $MYVIMRC' },
   { 'Update plugins', false, function() vim.pack.update() end },
   { 'Restart Neovim', false, 'restart' },
