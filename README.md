@@ -43,11 +43,11 @@ in the command palette, along with Neovim's own code keys.
 | --- | --- | --- | --- |
 | `Space p` | Command palette | `Space d` | Show problems |
 | `Space f` | Find a file | `Space w` | Save |
-| `Space /` | Search text in project | `Space q` | Close file |
+| `Space /` | Search text in project | `Space q` | Close |
 | `Space e` | Browse folder | `Space -` | Split below |
 | `Space r` | Recent files | `Space +` | Split right |
-| `Space ?` | Search help | `Space x` | Close window |
-| `Space [` | Go back | `Space ]` | Go forward |
+| `Space ?` | Search help | `Space [` | Go back |
+|  |  | `Space ]` | Go forward |
 
 `Space [` and `Space ]` go back and forward through where you've been, across files. In the file
 explorer, `[` and `]` go back and forward through folders. [All keys](docs/keys.md)

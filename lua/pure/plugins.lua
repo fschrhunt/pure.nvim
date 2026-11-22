@@ -125,8 +125,10 @@ require('mini.diff').setup({
   mappings = { apply = '', reset = '', textobject = '', goto_first = '', goto_last = '' },
 })
 
--- Press Space and pause: a small window lists every Space key and its name.
+-- Press Space or g and pause: a small window lists the keys that can follow,
+-- with their names. Only keys that exist with a description are listed (ours,
+-- and Neovim's own code keys like rename and comment), not every built-in command.
 require('mini.clue').setup({
-  triggers = { { mode = 'n', keys = '<Leader>' } },
+  triggers = { { mode = 'n', keys = '<Leader>' }, { mode = 'n', keys = 'g' } },
   window = { delay = 300 },
 })

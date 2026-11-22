@@ -52,6 +52,20 @@ local function recent_files()
   })
 end
 
+-- Closes what you're looking at: the split when the screen is split, otherwise
+-- the file (asking first if it has unsaved changes).
+local function close()
+  local splits = vim.tbl_filter(
+    function(win) return vim.api.nvim_win_get_config(win).relative == '' end,
+    vim.api.nvim_tabpage_list_wins(0)
+  )
+  if #splits > 1 then
+    vim.cmd.close()
+  else
+    vim.cmd('confirm bdelete')
+  end
+end
+
 local function open_terminal()
   vim.cmd('botright split | terminal')
   vim.cmd.startinsert()
@@ -81,12 +95,11 @@ local actions = {
   { 'New file', false, 'enew' },
   { 'Save', '<leader>w', 'write' },
   { 'Save all', false, 'wall' },
-  { 'Close file', '<leader>q', 'confirm bdelete' },
+  { 'Close', '<leader>q', close },
   { 'Copy file path', false, copy_path },
   -- Windows
   { 'Split right', '<leader>+', 'vsplit' },
   { 'Split below', '<leader>-', 'split' },
-  { 'Close window', '<leader>x', 'close' },
   { 'Open terminal', false, open_terminal },
   -- Code
   { 'Go to definition', '<C-]>', vim.lsp.buf.definition },
