@@ -21,11 +21,12 @@ vim.o.signcolumn = 'number' -- markers replace the line number, no extra column
 vim.o.showmode = false -- the cursor shape already shows the mode
 vim.o.ruler = false
 vim.o.laststatus = 1 -- a status bar only appears once the screen is split
-vim.o.statusline = [[ %f%{&modified ? ' ●' : ''}]]
+vim.o.statusline =
+  [[ %{&buftype ==# 'terminal' ? 'Terminal' : expand('%') ==# '' ? 'New file' : expand('%:~:.')}%{&modified ? ' ●' : ''}]]
 vim.o.title = true
 vim.o.titlestring = [[%{&modified ? '● ' : ''}%t]] -- unsaved changes show in the tab title
 vim.o.fillchars = 'eob: ,stl: ,stlnc: ,fold: ' -- no ~ past the end of the file
-vim.opt.shortmess:append('I') -- no intro screen
+vim.opt.shortmess:append('Ic') -- no intro screen, no completion chatter like 'match 1 of 3'
 vim.o.pumheight = 12
 vim.o.scrolloff = 5
 vim.o.smoothscroll = true
@@ -91,3 +92,7 @@ vim.api.nvim_create_autocmd('BufReadPost', {
     end
   end,
 })
+
+-- In a terminal, Esc twice returns to Neovim; a single Esc still reaches the
+-- program running there.
+vim.keymap.set('t', '<Esc><Esc>', [[<C-\><C-n>]], { desc = 'Leave the terminal' })

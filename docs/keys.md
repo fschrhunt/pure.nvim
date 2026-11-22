@@ -85,8 +85,14 @@ fields) and `Enter` accepts one, which also adds any import it needs.
 
 When something asks a question, like installing a missing language server, a toast appears in
 the bottom-right corner with Yes and No buttons. Press `Space y` or `Space n`, or click a button.
-It doesn't take the cursor, so you can keep typing, and it stays until you answer. A second
-question waits until the first is answered.
+It doesn't take the cursor, so you can keep typing, and it stays until you answer. After Yes, the
+same toast shows the progress and then the result, and closes on its own. The next question
+waits until it's gone, and the toast moves up out of the way of Neovim's own messages.
+
+## In a terminal
+
+"Open terminal" in the palette opens a shell in a split below. `Esc` twice returns to Neovim
+(a single `Esc` still reaches the program running there), and `Space q` closes it.
 
 Panels show the Space key as the spacebar icon `󱁐` (it needs a Nerd Font).
 

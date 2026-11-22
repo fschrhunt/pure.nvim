@@ -3,6 +3,7 @@ return {
   cmd = { 'harper-ls', '--stdio' },
   filetypes = { 'markdown', 'gitcommit', 'text' },
   root_markers = { '.git' },
+  purpose = 'spelling and grammar checks',
   install = {
     github = 'Automattic/harper',
     files = {

@@ -5,9 +5,10 @@ type, errors and warnings, go to definition, rename, and code actions. Prose (Ma
 messages, plain text) gets spelling and grammar checking.
 
 pure installs language servers itself, into its own folder. No package manager is needed. Open a
-file whose server is missing, and a toast in the bottom-right corner asks whether to install it:
-`Space y` or a click on Yes installs it, `Space n` or No skips it. The toast never takes the cursor
-and stays until you answer. A server already on your `PATH` is used without asking.
+file whose servers are missing, and one toast in the bottom-right corner asks whether to install
+them, saying what each adds: `Space y` or a click on Yes installs them, `Space n` or No skips.
+The toast never takes the cursor and stays until you answer; after Yes it shows the progress and
+the result. A server already on your `PATH` is used without asking.
 
 ## Syntax
 
@@ -80,7 +81,7 @@ installed one.
 
 - Problems as you type: a wavy underline under the exact spot, a colored `●` in place of the line
   number, and the message at the end of the line your cursor is on. `Space d` lists every problem.
-- Suggestions while typing, with imports added when you accept one.
+- Suggestions while typing, from the server alone, with imports added when you accept one.
 - Go to definition, docs, references, rename, and code actions; see [keys](keys.md#code).
 
 ## Formatting

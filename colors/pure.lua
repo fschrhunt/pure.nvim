@@ -107,12 +107,15 @@ local groups = {
   FloatBorder = { fg = c.blue, bg = c.surface },
   PurePanelBar = { fg = c.blue }, -- on the terminal's background, apart from the panel
   PurePanelPadding = { fg = c.surface, bg = c.surface },
+  PurePanelDivider = { fg = c.faint }, -- section rows in hover docs
   FloatTitle = { fg = c.blue, bg = c.surface, bold = true },
   FloatFooter = { fg = c.muted, bg = c.surface },
   Pmenu = { fg = c.text, bg = c.surface },
   PmenuBorder = { fg = c.surface, bg = c.surface },
   PmenuSel = { bg = c.shade, bold = true },
   PmenuMatch = { fg = c.blue, bg = c.surface },
+  PmenuKind = { fg = c.muted, bg = c.surface },
+  PmenuExtra = { fg = c.muted, bg = c.surface },
   PmenuMatchSel = { fg = c.blue, bg = c.shade, bold = true },
   PmenuSbar = { bg = c.surface },
   PmenuThumb = { bg = c.faint },
@@ -165,6 +168,7 @@ local groups = {
   -- Toasts (pure.toast)
   PureToastTitle = { fg = c.text, bold = true },
   PureToastMessage = { fg = c.text },
+  PureToastError = { fg = c.coral },
   PureToastYes = { fg = c.ink, bg = c.blue, bold = true },
   PureToastNo = { fg = c.text, bg = c.shade, bold = true },
 
