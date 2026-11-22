@@ -84,8 +84,10 @@ fields) and `Enter` accepts one, which also adds any import it needs.
 ## Toasts
 
 When something asks a question, like installing a missing language server, a toast appears in
-the top-right corner with Yes and No buttons. Press `Space y` or `Space n`, or click a button. It
-doesn't take the cursor, so you can keep typing, and it closes on its own if you ignore it.
+the bottom-right corner with Yes and No buttons. Press `Space y` or `Space n`, or click a button.
+It doesn't take the cursor, so you can keep typing, and it closes on its own if you ignore it.
+
+Panels show the Space key as the spacebar icon `󱁐` (it needs a Nerd Font).
 
 ## In the picker
 

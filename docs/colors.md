@@ -2,9 +2,8 @@
 
 `pure` is a soft, dark color scheme. Code sits on whatever background your terminal has, and
 floating panels (the palette, pickers, completion, key hints, and toasts) are solid blocks of a
-surface color with padding and no outline. A thin blue bar down the left side marks the panels
-that want your input: toasts that ask a question, and the prompt you type into in the picker and
-palette. It lives in one file, `colors/pure.lua`.
+surface color with padding, no outline, and a thin blue bar down the left side. The completion
+menu, which opens as you type, gets the padding without the bar. It lives in one file, `colors/pure.lua`.
 
 ## The palette
 

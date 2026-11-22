@@ -123,16 +123,19 @@ for _, entry in ipairs(actions) do
   end
 end
 
--- The palette is a compact list. Entries read "Name   Space x   :word", with
--- the key and command in a quieter color.
+-- The palette is a compact list. Entries read "Name   󱁐 x   :word", with the
+-- spacebar icon for Space and the key and command in a quieter color.
 local name_width, key_width = 26, 11
 
 local function key_label(key)
   if not key then
     return ''
   end
-  return (key:gsub('<leader>', 'Space '):gsub('<C%-(.)>', 'Ctrl-%1'))
+  return (key:gsub('<leader>', '󱁐 '):gsub('<C%-(.)>', 'Ctrl-%1'))
 end
+
+-- Pads by display width: the spacebar icon is several bytes but one column.
+local function pad(text, width) return text .. (' '):rep(width - vim.fn.strdisplaywidth(text)) end
 
 local function open_palette()
   picker.select(actions, {
@@ -142,11 +145,7 @@ local function open_palette()
     hint_col = name_width,
     format_item = function(entry)
       local command = entry.cmd and (':' .. entry.cmd) or ''
-      return ('%-' .. name_width .. 's%-' .. key_width .. 's%s'):format(
-        entry[1],
-        key_label(entry[2]),
-        command
-      )
+      return pad(entry[1], name_width) .. pad(key_label(entry[2]), key_width) .. command
     end,
   }, function(entry)
     if entry then

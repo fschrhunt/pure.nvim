@@ -26,7 +26,12 @@ vim.o.title = true
 vim.o.titlestring = [[%{&modified ? '● ' : ''}%t]] -- unsaved changes show in the tab title
 vim.o.fillchars = 'eob: ,stl: ,stlnc: ,fold: ' -- no ~ past the end of the file
 vim.opt.shortmess:append('I') -- no intro screen
-vim.o.winborder = 'solid' -- panels are solid blocks with padding, no outline
+-- Floating panels are solid blocks with padding and a blue bar down the left
+-- side, no outline. Padding cells use a non-breaking space: 'winborder' won't
+-- take a plain one. The completion menu, which opens as you type, gets
+-- padding only.
+local pad = '\194\160'
+vim.o.winborder = table.concat({ '┃', pad, pad, pad, pad, pad, '┃', '┃' }, ',')
 vim.o.pumborder = 'solid'
 vim.o.pumheight = 12
 vim.o.scrolloff = 5

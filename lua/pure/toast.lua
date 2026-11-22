@@ -1,4 +1,4 @@
--- Toast: a small panel in the top-right corner that asks one yes-or-no
+-- Toast: a small panel in the bottom-right corner that asks one yes-or-no
 -- question with two buttons. Space y / Space n answer it while it's showing,
 -- and clicking a button works too. It never takes the cursor, and it closes on
 -- its own after a while, which counts as no.
@@ -26,10 +26,9 @@ function M.ask(opts)
   dismiss()
 
   -- Lines: title, message, a blank line, then the buttons, with one space of
-  -- padding on each side.
-  local yes, no = ' Yes  Space y ', ' No  Space n '
-  local buttons = ' ' .. yes .. '  ' .. no
-  local lines = { ' ' .. opts.title, ' ' .. opts.message, '', buttons }
+  -- padding on each side. Buttons name their key with the spacebar icon.
+  local yes, no = ' Yes  󱁐 Y ', ' No  󱁐 N '
+  local lines = { ' ' .. opts.title, ' ' .. opts.message, '', ' ' .. yes .. '  ' .. no }
   local width = 0
   for _, line in ipairs(lines) do
     width = math.max(width, vim.fn.strdisplaywidth(line) + 1)
@@ -39,31 +38,23 @@ function M.ask(opts)
   vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
   vim.hl.range(buf, ns, 'PureToastTitle', { 0, 0 }, { 0, -1 })
   vim.hl.range(buf, ns, 'PureToastMessage', { 1, 0 }, { 1, -1 })
-  local yes_from, no_from = 1, 1 + #yes + 2
-  vim.hl.range(buf, ns, 'PureToastYes', { 3, yes_from }, { 3, yes_from + #yes })
-  vim.hl.range(buf, ns, 'PureToastYesKey', { 3, yes_from + 6 }, { 3, yes_from + #yes - 1 })
-  vim.hl.range(buf, ns, 'PureToastNo', { 3, no_from }, { 3, no_from + #no })
-  vim.hl.range(buf, ns, 'PureToastNoKey', { 3, no_from + 5 }, { 3, no_from + #no - 1 })
+  -- Highlights are in bytes; clicks arrive in screen columns. The icon is
+  -- several bytes but one column wide, so each button keeps both.
+  local yes_byte, no_byte = 1, 1 + #yes + 2
+  local yes_col, no_col = 1, 1 + vim.fn.strdisplaywidth(yes) + 2
+  vim.hl.range(buf, ns, 'PureToastYes', { 3, yes_byte }, { 3, yes_byte + #yes })
+  vim.hl.range(buf, ns, 'PureToastNo', { 3, no_byte }, { 3, no_byte + #no })
 
+  -- Bottom-right corner, above anything else there; the border comes from
+  -- 'winborder', so it has the same bar as every panel.
   local win = vim.api.nvim_open_win(buf, false, {
     relative = 'editor',
-    anchor = 'NE',
-    row = 1,
+    anchor = 'SE',
+    row = vim.o.lines - 1,
     col = vim.o.columns - 1,
     width = width,
     height = #lines,
     style = 'minimal',
-    -- A colored bar down the left side, padding elsewhere, no outline.
-    border = {
-      { '┃', 'PureAccent' },
-      ' ',
-      ' ',
-      ' ',
-      ' ',
-      ' ',
-      { '┃', 'PureAccent' },
-      { '┃', 'PureAccent' },
-    },
     zindex = 60,
   })
 
@@ -86,9 +77,9 @@ function M.ask(opts)
     local mouse = vim.fn.getmousepos()
     vim.cmd.wincmd('p')
     local on_buttons, col = mouse.winid == win and mouse.line == 4, mouse.wincol
-    if on_buttons and col > yes_from and col <= yes_from + #yes then
+    if on_buttons and col > yes_col and col <= yes_col + vim.fn.strdisplaywidth(yes) then
       answer(true)
-    elseif on_buttons and col > no_from and col <= no_from + #no then
+    elseif on_buttons and col > no_col and col <= no_col + vim.fn.strdisplaywidth(no) then
       answer(false)
     end
   end, { buffer = buf })
