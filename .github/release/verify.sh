@@ -1,6 +1,6 @@
 #!/bin/sh
-# Check that a commit may be released as a tag. The release workflow runs this
-# for both requested releases and maintainer-pushed tags.
+# Check that a main commit may be released as a tag. The release workflow runs
+# this before it writes the changelog and tags the release.
 #
 # usage: verify.sh vX.Y.Z COMMIT   (needs full history, origin/main, and gh)
 set -eu
@@ -14,16 +14,7 @@ printf '%s\n' "$tag" | LC_ALL=C grep -Eq '^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0
     fail "expected a stable version such as v1.2.3 without leading zeros: $tag"
 printf '%s\n' "$commit" | LC_ALL=C grep -Eq '^[0-9a-f]{40}$' || fail "expected a full commit SHA: $commit"
 git merge-base --is-ancestor "$commit" origin/main || fail "$commit is not on main"
-
-git show "$commit:CHANGELOG.md" | awk -v tag="$tag" '
-    /^## / { section = ($2 == tag); if (section) count++; next }
-    section && /[^[:space:]]/ { body = 1 }
-    END { exit !(count == 1 && body) }
-' || fail "CHANGELOG.md must have exactly one nonempty ## $tag section"
-
-if existing=$(git rev-parse -q --verify "refs/tags/$tag^{commit}"); then
-    [ "$existing" = "$commit" ] || fail "$tag already points to $existing"
-fi
+git rev-parse -q --verify "refs/tags/$tag" >/dev/null && fail "$tag already exists"
 
 result=$(gh run list --workflow ci.yml --branch main --event push --commit "$commit" \
     --json status,conclusion --jq '.[0] | "\(.status) \(.conclusion)"')
