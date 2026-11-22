@@ -153,6 +153,10 @@ local groups = {
   MiniIconsRed = { fg = c.coral },
   MiniIconsYellow = { fg = c.yellow },
 
+  -- The blue bar down the left of panels that want your input: toasts and the
+  -- picker's prompt.
+  PureAccent = { fg = c.blue, bg = c.surface },
+
   -- Picker (pure.picker)
   PurePickerPrefix = { fg = c.purple },
   PurePickerMatch = { fg = c.blue, bold = true },
@@ -161,7 +165,6 @@ local groups = {
   PurePickerHint = { fg = c.muted }, -- keys and commands in the command palette
 
   -- Toasts (pure.toast)
-  PureToastAccent = { fg = c.blue, bg = c.surface }, -- the bar down the toast's left side
   PureToastTitle = { fg = c.text, bold = true },
   PureToastMessage = { fg = c.muted },
   PureToastYes = { fg = c.ink, bg = c.blue, bold = true },
