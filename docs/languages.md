@@ -1,10 +1,13 @@
 # Languages
 
-Every language gets syntax colors, and the 25 below also get a language server for errors,
-completion, and go to definition. Nothing is installed without asking: open a file whose language
-server is missing, and a toast in the bottom-right corner asks whether to install it. Press `Space y`
-or click Yes to install it, `Space n` or No to skip. The toast never takes the cursor and stays
-until you answer; `:install` works any time later.
+Every language gets syntax colors, and the 25 below also get a language server: completion as you
+type, errors and warnings, go to definition, rename, and code actions. Prose (Markdown, commit
+messages, plain text) gets spelling and grammar checking.
+
+pure installs language servers itself, into its own folder. No package manager is needed. Open a
+file whose server is missing, and a toast in the bottom-right corner asks whether to install it:
+`Space y` or a click on Yes installs it, `Space n` or No skips it. The toast never takes the cursor
+and stays until you answer. A server already on your `PATH` is used without asking.
 
 ## Syntax
 
@@ -14,44 +17,66 @@ needs the tree-sitter CLI and a C compiler); the file switches to full colors wh
 
 ## Language servers
 
-Each language has a file in `lsp/`, named after it, with the server's command and the command
-`:install` runs.
+Each language has a file in `lsp/`, named after it, with the server's command, its settings, and
+where to get it.
 
-| Language | File | Server | Installed with |
+| Language | File | Server | Comes from |
 | --- | --- | --- | --- |
 | Astro | `astro.lua` | @astrojs/language-server | npm |
-| Bash and sh | `bash.lua` | bash-language-server | Homebrew |
-| C, C++, Objective-C | `c.lua` | clangd | Apple's command line tools |
-| CSS, SCSS, Less | `css.lua` | vscode-css-language-server | Homebrew |
-| Dockerfile | `docker.lua` | dockerfile-language-server | Homebrew |
-| Elixir | `elixir.lua` | elixir-ls | Homebrew |
-| Go | `go.lua` | gopls | Homebrew |
-| Haskell | `haskell.lua` | haskell-language-server | Homebrew |
-| HTML | `html.lua` | vscode-html-language-server | Homebrew |
-| Java | `java.lua` | jdtls | Homebrew |
-| JSON | `json.lua` | vscode-json-language-server | Homebrew |
-| Kotlin | `kotlin.lua` | kotlin-language-server | Homebrew |
-| Lua | `lua.lua` | lua-language-server | Homebrew |
-| Markdown | `markdown.lua` | marksman | Homebrew |
+| Bash and sh | `bash.lua` | bash-language-server | npm |
+| C, C++, Objective-C | `c.lua` | clangd | clangd releases |
+| CSS, SCSS, Less | `css.lua` | vscode-css-language-server | npm |
+| Dockerfile | `docker.lua` | dockerfile-language-server | npm |
+| Elixir | `elixir.lua` | elixir-ls | elixir-ls releases; runs on your Elixir |
+| Go | `go.lua` | gopls | `go install` |
+| Haskell | `haskell.lua` | haskell-language-server | `ghcup`, to match your GHC |
+| HTML | `html.lua` | vscode-html-language-server | npm |
+| Java | `java.lua` | jdtls | Eclipse downloads; runs on Java 21+ |
+| JSON | `json.lua` | vscode-json-language-server | npm |
+| Kotlin | `kotlin.lua` | kotlin-language-server | its releases; runs on Java |
+| Lua | `lua.lua` | lua-language-server | its releases |
+| Markdown | `markdown.lua` | marksman | its releases |
 | PHP | `php.lua` | intelephense | npm |
-| Python | `python.lua` | basedpyright | Homebrew |
-| Ruby | `ruby.lua` | ruby-lsp | Homebrew |
-| Rust | `rust.lua` | rust-analyzer | Homebrew |
+| Python | `python.lua` | basedpyright | npm |
+| Ruby | `ruby.lua` | ruby-lsp | `gem` |
+| Rust | `rust.lua` | rust-analyzer | its releases |
 | Svelte | `svelte.lua` | svelte-language-server | npm |
-| Swift | `swift.lua` | sourcekit-lsp | Apple's command line tools |
-| Terraform | `terraform.lua` | terraform-ls | Homebrew |
-| TOML | `toml.lua` | taplo | Homebrew |
-| TypeScript, JavaScript | `typescript.lua` | typescript-language-server | Homebrew |
-| YAML | `yaml.lua` | yaml-language-server | Homebrew |
-| Zig | `zig.lua` | zls | Homebrew |
+| Swift | `swift.lua` | sourcekit-lsp | the Swift toolchain |
+| Terraform | `terraform.lua` | terraform-ls | HashiCorp releases |
+| TOML | `toml.lua` | taplo | its releases |
+| TypeScript, JavaScript | `typescript.lua` | typescript-language-server | npm |
+| YAML | `yaml.lua` | yaml-language-server | npm |
+| Zig | `zig.lua` | zls | its releases |
+| Spelling and grammar | `harper.lua` | harper-ls | its releases |
 
-A server that isn't installed simply doesn't start. Each language asks once per session, so the
-toast won't follow you around.
+npm servers run on your Node if you have one; otherwise pure downloads the current Node.js LTS
+once, into the same folder. Go, Ruby, and Haskell servers only ship through their language's own
+tools, which anyone writing those languages already has.
+
+## Installing, updating, and removing
+
+- `:install` installs what the current file is missing; `:install rust` or `:install harper`
+  installs or updates one by name.
+- About once a week, pure checks the servers it installed for newer versions and asks in a toast
+  before updating. "Update language servers" in the palette updates them all now.
+- Everything lives in `~/.local/share/nvim/servers`. Delete that folder to remove them all.
+
+Downloads are checked against the SHA-256 their project publishes. taplo's and the Kotlin
+server's current releases don't publish one; those rely on the secure download alone.
+
+A server you install yourself, with any package manager, is used as is: pure only installs what
+it can't find on `PATH`, and leaves updating yours to you.
+
+## For scripts and coding agents
+
+`nvim --headless '+Install rust' +qa` installs a server and waits for it to finish. Anything placed
+in `~/.local/share/nvim/servers/bin` with the name of a server's command is used like an
+installed one.
 
 ## What a language server gives you
 
-- Problems as you type. A colored `●` replaces the line number, and the message appears at the
-  end of the line your cursor is on. `Space d` lists every problem.
+- Problems as you type: a wavy underline under the exact spot, a colored `●` in place of the line
+  number, and the message at the end of the line your cursor is on. `Space d` lists every problem.
 - Suggestions while typing, with imports added when you accept one.
 - Go to definition, docs, references, rename, and code actions; see [keys](keys.md#code).
 
@@ -62,8 +87,7 @@ Files are formatted when you save, and `:format` formats on demand:
 1. In a project with a Prettier config (`.prettierrc`, `prettier.config.js`, and the like) and
    Prettier installed in its `node_modules`, Prettier formats JavaScript, TypeScript, Astro, CSS,
    HTML, JSON, Markdown, and YAML.
-2. Python is formatted with [ruff](https://docs.astral.sh/ruff/) when it's installed
-   (`brew install ruff`).
+2. Python is formatted with [ruff](https://docs.astral.sh/ruff/) when it's installed.
 3. Everything else uses its language server's formatter, when it has one.
 
 Only the lines that change are rewritten, so the cursor and marks stay put. If the formatter can't
@@ -71,9 +95,9 @@ parse the file, the save goes through unformatted and a toast says why.
 
 ## Adding a language
 
-Create `lsp/<language>.lua` with the server's command, file types, the files that mark a
-project's root, and how to install it. It starts automatically when installed, and `:install`
-works for it right away:
+Create `lsp/<language>.lua` with the server's command, file types, the files that mark a project's
+root, and where to get it. It starts automatically when installed, and `:install` works for it
+right away:
 
 ```lua
 -- Gleam: the Gleam language server, part of the gleam CLI.
@@ -81,8 +105,18 @@ return {
   cmd = { 'gleam', 'lsp' },
   filetypes = { 'gleam' },
   root_markers = { 'gleam.toml', '.git' },
-  install = 'brew install gleam',
+  install = {
+    github = 'gleam-lang/gleam',
+    files = {
+      ['mac-arm64'] = 'gleam-v{version}-aarch64-apple-darwin.tar.gz',
+      ['mac-x64'] = 'gleam-v{version}-x86_64-apple-darwin.tar.gz',
+      ['linux-arm64'] = 'gleam-v{version}-aarch64-unknown-linux-musl.tar.gz',
+      ['linux-x64'] = 'gleam-v{version}-x86_64-unknown-linux-musl.tar.gz',
+    },
+    bin = 'gleam',
+  },
 }
 ```
 
-Restart Neovim to pick it up. If the server doesn't start, `:checkhealth vim.lsp` shows why.
+`lua/pure/servers.lua` describes every kind of `install` recipe. Restart Neovim to pick up a new
+file. If the server doesn't start, `:checkhealth vim.lsp` shows why.

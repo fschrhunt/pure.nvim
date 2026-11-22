@@ -15,7 +15,7 @@ return {
   cmd = { 'astro-ls', '--stdio' },
   filetypes = { 'astro' },
   root_markers = { 'package.json', 'tsconfig.json', '.git' },
-  install = 'npm install -g @astrojs/language-server',
+  install = { npm = { '@astrojs/language-server', 'typescript' }, bin = 'astro-ls' },
   before_init = function(params, config)
     params.initializationOptions = { typescript = { tsdk = typescript_lib(config.root_dir) } }
   end,

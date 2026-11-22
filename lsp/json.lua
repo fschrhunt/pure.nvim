@@ -4,5 +4,5 @@ return {
   filetypes = { 'json', 'jsonc' },
   root_markers = { '.git' },
   init_options = { provideFormatter = true },
-  install = 'brew install vscode-langservers-extracted',
+  install = { npm = { 'vscode-langservers-extracted' } },
 }

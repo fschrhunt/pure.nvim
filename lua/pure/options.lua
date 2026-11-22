@@ -91,10 +91,3 @@ vim.api.nvim_create_autocmd('BufReadPost', {
     end
   end,
 })
-
-vim.api.nvim_create_autocmd('FileType', {
-  group = group,
-  pattern = { 'markdown', 'gitcommit', 'text' },
-  desc = 'Spell check where you write prose',
-  callback = function() vim.wo.spell = true end,
-})

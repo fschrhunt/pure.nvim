@@ -14,10 +14,14 @@
   folders, like a browser. `Space q` closes the split, or the file when there's one window.
 - Add a full-height file explorer with a preview (`:explore`): `[` and `]` move through folders,
   `Enter` opens a file, and edits apply with `=`.
-- Support 25 languages, one file each in `lsp/`, named after the language. Missing language
-  servers are offered in a toast with Yes and No buttons (`Space y` / `Space n`, or a click), and
-  `:install` installs one any time. Completion while typing, problems on the current line, and
-  formatting on save through Prettier, ruff, or the language server.
+- Support 25 languages, one file each in `lsp/`, named after the language, with completion
+  while typing, problems underlined and on the current line, and formatting on save through
+  Prettier, ruff, or the language server.
+- Install language servers into pure's own folder, with no package manager: from their releases
+  (checked against published checksums), npm (with a downloaded Node.js if needed), or the
+  language's own tool where that's the only way they ship. A missing server is offered in a toast
+  with Yes and No buttons; `:install <language>` installs or updates one by name; newer versions
+  are offered weekly. Prose gets spelling and grammar checking.
 - Highlight and fold every language nvim-treesitter supports, building each parser the first time
   its language is opened.
 - Show messages as toasts in the bottom-right corner, and use Neovim 0.12's undo history and file

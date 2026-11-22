@@ -10,5 +10,14 @@ return {
       workspace = { library = { vim.env.VIMRUNTIME } },
     },
   },
-  install = 'brew install lua-language-server',
+  install = {
+    github = 'LuaLS/lua-language-server',
+    files = {
+      ['mac-arm64'] = 'lua-language-server-{version}-darwin-arm64.tar.gz',
+      ['mac-x64'] = 'lua-language-server-{version}-darwin-x64.tar.gz',
+      ['linux-arm64'] = 'lua-language-server-{version}-linux-arm64.tar.gz',
+      ['linux-x64'] = 'lua-language-server-{version}-linux-x64.tar.gz',
+    },
+    bin = 'bin/lua-language-server',
+  },
 }

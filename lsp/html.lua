@@ -4,5 +4,5 @@ return {
   filetypes = { 'html' },
   root_markers = { 'package.json', '.git' },
   init_options = { provideFormatter = true },
-  install = 'brew install vscode-langservers-extracted',
+  install = { npm = { 'vscode-langservers-extracted' } },
 }
