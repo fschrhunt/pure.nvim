@@ -1,6 +1,7 @@
 -- Actions: every action the setup offers, listed once. The list maps the
 -- Space keys and fills the command palette (Space p), so the palette always
--- shows everything and doubles as a cheat sheet.
+-- shows everything and doubles as a cheat sheet. Only everyday actions get a
+-- Space key; the rest are a palette search away.
 
 local function copy_path()
   local path = vim.fn.expand('%:~:.')
@@ -34,10 +35,10 @@ local actions = {
   -- Files
   { 'Find a file', '<leader>f', MiniPick.builtin.files },
   { 'Recent files', '<leader>r', MiniExtra.pickers.oldfiles },
-  { 'Open files', '<leader>b', MiniPick.builtin.buffers },
+  { 'Open files', false, MiniPick.builtin.buffers },
   { 'Search text in project', '<leader>/', MiniPick.builtin.grep_live },
   { 'Browse folder', '<leader>e', browse_folder },
-  { 'New file', '<leader>n', 'enew' },
+  { 'New file', false, 'enew' },
   { 'Save', '<leader>w', 'write' },
   { 'Save all', false, 'wall' },
   { 'Close file', '<leader>q', 'confirm bdelete' },
@@ -46,7 +47,7 @@ local actions = {
   { 'Split right', '<leader>+', 'vsplit' },
   { 'Split below', '<leader>-', 'split' },
   { 'Close window', '<leader>x', 'close' },
-  { 'Open terminal', '<leader>t', open_terminal },
+  { 'Open terminal', false, open_terminal },
   -- Code
   { 'Go to definition', '<C-]>', vim.lsp.buf.definition },
   { 'Show docs', 'K', vim.lsp.buf.hover },
@@ -59,17 +60,17 @@ local actions = {
   { 'Next problem', ']d', function() vim.diagnostic.jump({ count = 1 }) end },
   { 'Comment line', 'gcc', 'normal gcc' },
   -- Git
-  { 'Show git changes', '<leader>g', function() MiniDiff.toggle_overlay(0) end },
+  { 'Show git changes', false, function() MiniDiff.toggle_overlay(0) end },
   { 'List git changes', false, MiniExtra.pickers.git_hunks },
   { 'Next git change', ']h', function() MiniDiff.goto_hunk('next') end },
   -- View and history
-  { 'Undo history', '<leader>u', undo_history },
+  { 'Undo history', false, undo_history },
   { 'Compare files', false, compare_files },
   { 'Toggle line wrap', false, 'set wrap!' },
   { 'Toggle line numbers', false, 'set number!' },
   { 'Toggle spell check', false, 'set spell!' },
   -- Neovim
-  { 'Search help', '<leader>h', MiniPick.builtin.help },
+  { 'Search help', '<leader>?', MiniPick.builtin.help },
   { 'Edit config', false, 'edit $MYVIMRC' },
   { 'Update plugins', false, function() vim.pack.update() end },
   { 'Restart Neovim', false, 'restart' },

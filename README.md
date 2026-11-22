@@ -35,18 +35,17 @@ npm install -g @astrojs/language-server
 
 ## Keys
 
-Space is the leader. The palette shows these and the rest, including Neovim's own code keys.
+Everyday actions have a Space key. Press Space and pause to see them listed; everything else is
+in the command palette, along with Neovim's own code keys.
 
 | Key | Action | Key | Action |
 | --- | --- | --- | --- |
-| `Space p` | Command palette | `Space -` | Split below |
-| `Space f` | Find a file | `Space +` | Split right |
-| `Space r` | Recent files | `Space x` | Close window |
-| `Space /` | Search text in project | `Space t` | Open terminal |
-| `Space b` | Open files | `Space d` | Show problems |
-| `Space e` | Browse folder | `Space g` | Show git changes |
-| `Space w` | Save | `Space u` | Undo history |
-| `Space q` | Close file | `Space h` | Search help |
+| `Space p` | Command palette | `Space d` | Show problems |
+| `Space f` | Find a file | `Space w` | Save |
+| `Space /` | Search text in project | `Space q` | Close file |
+| `Space e` | Browse folder | `Space -` | Split below |
+| `Space r` | Recent files | `Space +` | Split right |
+| `Space ?` | Search help | `Space x` | Close window |
 
 `Ctrl-o` steps back to where you were. In the file explorer, `h` backs out of a folder, `l` goes
 in, and `Enter` opens a file.

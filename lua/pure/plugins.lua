@@ -78,3 +78,9 @@ vim.api.nvim_create_autocmd('User', {
 
 -- Changed lines get colored line numbers; ]h and [h jump between changes.
 require('mini.diff').setup()
+
+-- Press Space and pause: a small window lists every Space key and its name.
+require('mini.clue').setup({
+  triggers = { { mode = 'n', keys = '<Leader>' } },
+  window = { delay = 300 },
+})

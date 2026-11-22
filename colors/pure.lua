@@ -158,6 +158,12 @@ local groups = {
   MiniPickPreviewLine = { bg = c.shade },
   MiniFilesCursorLine = { bg = c.shade, bold = true },
   MiniFilesTitle = { fg = c.muted },
+
+  -- Space-key hints (mini.clue)
+  MiniClueNextKey = { fg = c.blue, bold = true },
+  MiniClueDescSingle = { fg = c.text },
+  MiniClueDescGroup = { fg = c.purple },
+  MiniClueSeparator = { fg = c.faint },
 }
 
 for name, spec in pairs(groups) do

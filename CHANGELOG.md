@@ -6,6 +6,8 @@
   colors file icons, the picker, and the file explorer to match.
 - Add a command palette (`Space p`) built from one list of actions, which also maps the Space
   keys.
+- Keep Space keys for everyday actions only, listed in a hint window when you press Space and
+  pause; other actions are in the palette.
 - Add finding files, recent files, project search, a side-by-side file explorer, and git change
   markers with mini.nvim.
 - Add language servers for Go, TypeScript, Astro, Python, Lua, and shell, with completion while
