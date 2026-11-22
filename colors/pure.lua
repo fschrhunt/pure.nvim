@@ -1,9 +1,11 @@
 -- pure: a soft, dark color scheme with a transparent background.
 --
 -- Every color comes from the palette below, so the editor looks the same in
--- any terminal; only the background is left to the terminal. Code keeps
--- color for what you scan for (keywords, definitions, types, literals) and
--- leaves calls, variables and brackets in the plain text color.
+-- any terminal. Code sits on the terminal's own background; floating panels
+-- (palette, pickers, completion, key hints, toasts) sit on a solid surface
+-- with padding instead of an outline. Code keeps color for what you scan for
+-- (keywords, definitions, types, literals) and leaves calls, variables and
+-- brackets in the plain text color.
 -- Requires 'termguicolors'.
 
 vim.cmd.highlight('clear')
@@ -13,7 +15,8 @@ local c = {
   text = '#d4d9e8', -- plain text
   muted = '#7f87a2', -- comments, quiet UI text
   faint = '#454b63', -- line numbers, borders
-  shade = '#2b3047', -- selection, current menu item
+  surface = '#1c2031', -- floating panels
+  shade = '#2b3047', -- selection, current item in a panel
   ink = '#171a26', -- dark text on bright highlights
 
   purple = '#b79cf2', -- keywords
@@ -100,15 +103,16 @@ local groups = {
   TabLine = { fg = c.muted },
   TabLineFill = {},
   TabLineSel = { fg = c.text, bold = true },
-  NormalFloat = { fg = c.text },
-  FloatBorder = { fg = c.faint },
-  FloatTitle = { fg = c.blue, bold = true },
-  Pmenu = { fg = c.text },
-  PmenuBorder = { fg = c.faint },
+  NormalFloat = { fg = c.text, bg = c.surface },
+  FloatBorder = { fg = c.surface, bg = c.surface },
+  FloatTitle = { fg = c.blue, bg = c.surface, bold = true },
+  FloatFooter = { fg = c.muted, bg = c.surface },
+  Pmenu = { fg = c.text, bg = c.surface },
+  PmenuBorder = { fg = c.surface, bg = c.surface },
   PmenuSel = { bg = c.shade, bold = true },
-  PmenuMatch = { fg = c.blue },
+  PmenuMatch = { fg = c.blue, bg = c.surface },
   PmenuMatchSel = { fg = c.blue, bg = c.shade, bold = true },
-  PmenuSbar = {},
+  PmenuSbar = { bg = c.surface },
   PmenuThumb = { bg = c.faint },
 
   -- Messages
@@ -152,13 +156,19 @@ local groups = {
   -- Picker (mini.pick) and file explorer (mini.files)
   MiniPickMatchCurrent = { bg = c.shade, bold = true },
   MiniPickMatchRanges = { fg = c.blue, bold = true },
-  MiniPickPrompt = { fg = c.text },
-  MiniPickPromptPrefix = { fg = c.purple },
+  MiniPickPrompt = { fg = c.text, bg = c.surface },
+  MiniPickPromptPrefix = { fg = c.purple, bg = c.surface },
+  MiniPickBorderText = { fg = c.muted, bg = c.surface },
   MiniPickHeader = { fg = c.muted },
   MiniPickPreviewLine = { bg = c.shade },
   PurePaletteHint = { fg = c.muted }, -- keys and commands in the command palette
+  -- The explorer's columns stay transparent, like windows rather than panels.
+  MiniFilesNormal = { fg = c.text },
+  MiniFilesBorder = { fg = c.faint },
+  MiniFilesBorderModified = { fg = c.yellow },
   MiniFilesCursorLine = { bg = c.shade, bold = true },
   MiniFilesTitle = { fg = c.muted },
+  MiniFilesTitleFocused = { fg = c.blue, bold = true },
 
   -- Space-key hints (mini.clue)
   MiniClueNextKey = { fg = c.blue, bold = true },

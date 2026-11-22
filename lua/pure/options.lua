@@ -26,8 +26,8 @@ vim.o.title = true
 vim.o.titlestring = [[%{&modified ? '● ' : ''}%t]] -- unsaved changes show in the tab title
 vim.o.fillchars = 'eob: ,stl: ,stlnc: ,fold: ' -- no ~ past the end of the file
 vim.opt.shortmess:append('I') -- no intro screen
-vim.o.winborder = 'rounded'
-vim.o.pumborder = 'rounded'
+vim.o.winborder = 'solid' -- floating panels get padding, not an outline
+vim.o.pumborder = 'solid'
 vim.o.pumheight = 12
 vim.o.scrolloff = 5
 vim.o.smoothscroll = true
