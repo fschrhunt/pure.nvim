@@ -1,9 +1,9 @@
 # pure.nvim
 
 A clean, intuitive Neovim. Built on what Neovim 0.12 ships with, plus two plugins for what it
-can't do alone: [mini.nvim](https://github.com/nvim-mini/mini.nvim) for icons, the picker, the file
-explorer, and git changes, and [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
-for syntax. Language servers and formatting are configured here, in plain files.
+can't do alone: [mini.nvim](https://github.com/nvim-mini/mini.nvim) for icons, the file explorer,
+git changes, and key hints, and [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
+for syntax. The picker, language servers, and formatting are its own, in plain files.
 
 Nothing on screen but your code. There's no status bar until you split, no file tree, and no
 background color: the `pure` color scheme draws text on whatever background your terminal has.

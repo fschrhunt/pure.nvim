@@ -1,7 +1,7 @@
 -- Plugins: installs the two plugins with Neovim's built-in vim.pack (versions
--- pinned in nvim-pack-lock.json) and sets up mini.nvim's icons, picker, file
--- explorer, git changes and Space-key hints. nvim-treesitter is configured in
--- pure.syntax. See docs/plugins.md.
+-- pinned in nvim-pack-lock.json) and sets up mini.nvim's icons, file explorer,
+-- git changes and Space-key hints. The picker is our own (pure.picker), and
+-- nvim-treesitter is configured in pure.syntax. See docs/plugins.md.
 
 local group = vim.api.nvim_create_augroup('pure.plugins', {})
 
@@ -25,44 +25,6 @@ vim.pack.add({
 }, { confirm = false })
 
 require('mini.icons').setup()
-require('mini.extra').setup()
-
--- One centered picker for files, search, recent files and the palette. Its
--- keys are the arrows, Enter, Esc, Tab (preview), and Ctrl-v / Ctrl-s (open in
--- a split) plus the usual text editing; the rest of mini.pick's keys are off.
-require('mini.pick').setup({
-  mappings = {
-    choose_in_tabpage = '',
-    choose_marked = '',
-    mark = '',
-    mark_all = '',
-    move_down = '',
-    move_start = '',
-    move_up = '',
-    paste = '',
-    refine = '',
-    refine_marked = '',
-    scroll_down = '',
-    scroll_left = '',
-    scroll_right = '',
-    scroll_up = '',
-    toggle_info = '',
-  },
-  window = {
-    config = function()
-      local height = math.min(24, math.floor(0.6 * vim.o.lines))
-      local width = math.min(110, math.floor(0.7 * vim.o.columns))
-      return {
-        anchor = 'NW',
-        height = height,
-        width = width,
-        row = math.floor(0.5 * (vim.o.lines - height)),
-        col = math.floor(0.5 * (vim.o.columns - width)),
-      }
-    end,
-  },
-})
-vim.ui.select = MiniPick.ui_select -- every "pick one" list uses the picker
 
 -- mini.files replaces Neovim's old file explorer, netrw, so don't load it.
 vim.g.loaded_netrw = 1
