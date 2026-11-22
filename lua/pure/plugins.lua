@@ -64,6 +64,10 @@ require('mini.pick').setup({
 })
 vim.ui.select = MiniPick.ui_select -- every "pick one" list uses the picker
 
+-- mini.files replaces Neovim's old file explorer, netrw, so don't load it.
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 -- Folders side by side, with a preview of the file under the cursor:
 -- [ goes back a folder, ] goes forward, Enter opens the file full screen,
 -- = applies edits, Esc closes, g? lists these. Its other keys are off.

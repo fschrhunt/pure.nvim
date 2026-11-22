@@ -25,7 +25,7 @@ keep each change to what it needs.
 - `lsp/`: one file per language server with its command, file types, and settings.
 - `lua/pure/actions.lua`: every action, its Space key, and the command palette.
 - `colors/pure.lua`: the color scheme.
-- `docs/`: user docs, one file per topic: keys, languages, colors, and plugins.
+- `docs/`: user docs, one file per topic: keys, commands, languages, colors, and plugins.
 - `nvim-pack-lock.json`: plugin revisions, written by `vim.pack`. Don't edit it by hand; run
   `./x update`.
 - `.github/workflows/`: CI, releases, and weekly plugin updates (`dependencies.yml`).
@@ -33,8 +33,9 @@ keep each change to what it needs.
 
 ## Conventions
 
-- Every user-facing action goes in the `actions` list so it reaches the palette. Space keys are
-  mapped from that list; don't map them elsewhere.
+- Every user-facing action goes in the `actions` list so it reaches the palette. Space keys and
+  plain-word commands are made from that list; don't define them elsewhere. A command word must
+  not shadow a Neovim command unless `docs/commands.md` lists it as replaced.
 - Colors come only from the palette table in `colors/pure.lua`. The scheme never sets `Normal`'s
   background.
 - Don't change Neovim's built-in keys; they're listed in the palette instead. The one exception is

@@ -4,7 +4,7 @@ pure.nvim keeps very few keys of its own. Everyday actions are on Space, everyth
 command palette, and the rest are Neovim's own keys, which work the same as in any tutorial.
 
 Lost? Press `Space p` and type what you want to do, or press Space and pause to see every Space
-key.
+key. Everyday actions are also [commands](commands.md), like `:back` and `:find`.
 
 ## Space keys
 

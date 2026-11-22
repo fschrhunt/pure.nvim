@@ -26,3 +26,6 @@
   explorer like the picker. Recent files lists open files first, replacing "Open files".
 - `Space q` closes what you're looking at: the split if the screen is split, otherwise the file.
   `Space x` is gone. Pressing `g` and pausing lists the code, comment, and link keys.
+- Add plain-word commands for everyday actions, such as `:back` (`:b`), `:forward` (`:f`), `:find`,
+  `:search`, `:close`, and `:palette`; the palette shows each action's command. Neovim's netrw
+  explorer is no longer loaded.

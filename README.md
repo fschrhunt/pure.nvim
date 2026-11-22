@@ -50,17 +50,20 @@ in the command palette, along with Neovim's own code keys.
 |  |  | `Space ]` | Go forward |
 
 `Space [` and `Space ]` go back and forward through where you've been, across files. In the file
-explorer, `[` and `]` go back and forward through folders. [All keys](docs/keys.md)
+explorer, `[` and `]` go back and forward through folders. Everyday actions are also commands,
+like `:back` (`:b`), `:forward` (`:f`), `:find`, and `:close`. [All keys](docs/keys.md) ·
+[All commands](docs/commands.md)
 
 ## Docs
 
 - [Keys](docs/keys.md): every key worth knowing, in the editor, the picker, and the file explorer.
+- [Commands](docs/commands.md): plain-word commands like `:back`, `:find`, and `:close`.
 - [Languages](docs/languages.md): what each language gets, formatting, and adding a language.
 - [Colors](docs/colors.md): the palette, what it colors, and how to change it.
 - [Plugins](docs/plugins.md): the two plugins, their versions, and updating them.
 
 To add an action of your own, add one line to the list in `lua/pure/actions.lua`. It appears in
-the palette, and gets its key there if you give it one.
+the palette, and gets its key and command there if you give it them.
 
 ## License
 

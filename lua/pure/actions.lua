@@ -1,7 +1,8 @@
 -- Actions: every action the setup offers, listed once. The list maps the
--- Space keys and fills the command palette (Space p), so the palette always
--- shows everything and doubles as a cheat sheet. Only everyday actions get a
--- Space key; the rest are a palette search away.
+-- Space keys, defines the plain-word commands (:back, :find, ...), and fills
+-- the command palette (Space p), so the palette always shows everything and
+-- doubles as a cheat sheet. Only everyday actions get a key or a command; the
+-- rest are a palette search away. See docs/keys.md and docs/commands.md.
 
 local function copy_path()
   local path = vim.fn.expand('%:~:.')
@@ -81,21 +82,23 @@ local function compare_files()
   vim.api.nvim_feedkeys(':DiffTool ', 'n', false)
 end
 
--- { name, key or false, Ex command or function }. Space keys are mapped
--- here. Other keys are Neovim's (or a plugin's) own and are only listed.
+-- { name, key or false, Ex command or function, cmd = word, short = letter }.
+-- Space keys are mapped here; other keys are Neovim's own and only listed.
+-- `cmd` makes the action a plain-word command, like :back, and `short` a
+-- one-letter form, like :b.
 local actions = {
   -- Getting around
-  { 'Go back', '<leader>[', go_back },
-  { 'Go forward', '<leader>]', go_forward },
+  { 'Go back', '<leader>[', go_back, cmd = 'back', short = 'b' },
+  { 'Go forward', '<leader>]', go_forward, cmd = 'forward', short = 'f' },
   -- Files
-  { 'Find a file', '<leader>f', MiniPick.builtin.files },
-  { 'Recent files', '<leader>r', recent_files },
-  { 'Search text in project', '<leader>/', MiniPick.builtin.grep_live },
-  { 'Browse folder', '<leader>e', browse_folder },
+  { 'Find a file', '<leader>f', MiniPick.builtin.files, cmd = 'find' },
+  { 'Recent files', '<leader>r', recent_files, cmd = 'recent' },
+  { 'Search text in project', '<leader>/', MiniPick.builtin.grep_live, cmd = 'search' },
+  { 'Browse folder', '<leader>e', browse_folder, cmd = 'explore' },
   { 'New file', false, 'enew' },
   { 'Save', '<leader>w', 'write' },
   { 'Save all', false, 'wall' },
-  { 'Close', '<leader>q', close },
+  { 'Close', '<leader>q', close, cmd = 'close' },
   { 'Copy file path', false, copy_path },
   -- Windows
   { 'Split right', '<leader>+', 'vsplit' },
@@ -104,12 +107,12 @@ local actions = {
   -- Code
   { 'Go to definition', '<C-]>', vim.lsp.buf.definition },
   { 'Show docs', 'K', vim.lsp.buf.hover },
-  { 'Find references', 'grr', vim.lsp.buf.references },
-  { 'Rename symbol', 'grn', vim.lsp.buf.rename },
-  { 'Code actions', 'gra', vim.lsp.buf.code_action },
-  { 'File outline', 'gO', vim.lsp.buf.document_symbol },
-  { 'Format file', false, 'Format' },
-  { 'Show problems', '<leader>d', MiniExtra.pickers.diagnostic },
+  { 'Find references', 'grr', vim.lsp.buf.references, cmd = 'references' },
+  { 'Rename symbol', 'grn', vim.lsp.buf.rename, cmd = 'rename' },
+  { 'Code actions', 'gra', vim.lsp.buf.code_action, cmd = 'actions' },
+  { 'File outline', 'gO', vim.lsp.buf.document_symbol, cmd = 'outline' },
+  { 'Format file', false, 'Format', cmd = 'format' },
+  { 'Show problems', '<leader>d', MiniExtra.pickers.diagnostic, cmd = 'problems' },
   { 'Next problem', ']d', function() vim.diagnostic.jump({ count = 1 }) end },
   { 'Comment line', 'gcc', 'normal gcc' },
   -- Git
@@ -118,13 +121,13 @@ local actions = {
   { 'Next git change', ']h', function() MiniDiff.goto_hunk('next') end },
   -- View and history
   { 'Undo history', false, undo_history },
-  { 'Compare files', false, compare_files },
+  { 'Compare files', false, compare_files, cmd = 'compare' },
   { 'Toggle line wrap', false, 'set wrap!' },
   { 'Toggle line numbers', false, 'set number!' },
   { 'Toggle spell check', false, 'set spell!' },
   -- Neovim
   { 'Search help', '<leader>?', MiniPick.builtin.help },
-  { 'Edit config', false, 'edit $MYVIMRC' },
+  { 'Edit config', false, 'edit $MYVIMRC', cmd = 'config' },
   { 'Update plugins', false, function() vim.pack.update() end },
   { 'Restart Neovim', false, 'restart' },
   { 'Quit Neovim', false, 'confirm qall' },
@@ -145,7 +148,7 @@ for _, entry in ipairs(actions) do
   end
 end
 
--- Palette entries read "Name        Space x".
+-- Palette entries read "Name        Space x   :word".
 local function key_label(key)
   if not key then
     return ''
@@ -153,16 +156,47 @@ local function key_label(key)
   return (key:gsub('<leader>', 'Space '):gsub('<C%-(.)>', 'Ctrl-%1'))
 end
 
-vim.keymap.set('n', '<leader>p', function()
+local function open_palette()
   vim.ui.select(actions, {
     prompt = 'Command palette',
-    format_item = function(entry) return ('%-26s%s'):format(entry[1], key_label(entry[2])) end,
+    format_item = function(entry)
+      local command = entry.cmd and (':' .. entry.cmd) or ''
+      return ('%-26s%-11s%s'):format(entry[1], key_label(entry[2]), command)
+    end,
   }, function(entry)
     if entry then
       run(entry[3])
     end
   end)
-end, { desc = 'Command palette' })
+end
+vim.keymap.set('n', '<leader>p', open_palette, { desc = 'Command palette' })
+
+-- Plain-word commands --------------------------------------------------------
+
+-- Neovim requires user commands to start with a capital letter, so :Back is
+-- the command and typing `back` (or `b`) expands to it. It only expands when
+-- the word is the whole command line, so `b` elsewhere is left alone.
+local function add_command(word, short, action)
+  local command = word:sub(1, 1):upper() .. word:sub(2)
+  if action ~= command then -- :Format already exists; only its word is added
+    vim.api.nvim_create_user_command(command, function() run(action) end, {})
+  end
+  for _, typed in ipairs({ word, short }) do
+    local expand = ([[getcmdtype() ==# ':' && getcmdline() ==# '%s' ? '%s' : '%s']]):format(
+      typed,
+      command,
+      typed
+    )
+    vim.cmd.cnoreabbrev({ '<expr>', typed, expand })
+  end
+end
+
+for _, entry in ipairs(actions) do
+  if entry.cmd then
+    add_command(entry.cmd, entry.short, entry[3])
+  end
+end
+add_command('palette', nil, open_palette)
 
 -- Small comforts ------------------------------------------------------------
 
