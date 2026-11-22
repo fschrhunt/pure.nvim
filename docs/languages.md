@@ -31,9 +31,9 @@ where to get it.
 | Go | `go.lua` | gopls | `go install` |
 | Haskell | `haskell.lua` | haskell-language-server | `ghcup`, to match your GHC |
 | HTML | `html.lua` | vscode-html-language-server | npm |
-| Java | `java.lua` | jdtls | Eclipse downloads; runs on Java 21+ |
+| Java | `java.lua` | jdtls | Eclipse downloads; runs on Java 25+ |
 | JSON | `json.lua` | vscode-json-language-server | npm |
-| Kotlin | `kotlin.lua` | kotlin-language-server | its releases; runs on Java |
+| Kotlin | `kotlin.lua` | kotlin-language-server | its releases, pinned; runs on Java 11+ |
 | Lua | `lua.lua` | lua-language-server | its releases |
 | Markdown | `markdown.lua` | marksman | its releases |
 | PHP | `php.lua` | intelephense | npm |
@@ -43,15 +43,17 @@ where to get it.
 | Svelte | `svelte.lua` | svelte-language-server | npm |
 | Swift | `swift.lua` | sourcekit-lsp | the Swift toolchain |
 | Terraform | `terraform.lua` | terraform-ls | HashiCorp releases |
-| TOML | `toml.lua` | taplo | its releases |
+| TOML | `toml.lua` | taplo | npm |
 | TypeScript, JavaScript | `typescript.lua` | typescript-language-server | npm |
 | YAML | `yaml.lua` | yaml-language-server | npm |
 | Zig | `zig.lua` | zls | its releases |
 | Spelling and grammar | `harper.lua` | harper-ls | its releases |
 
 npm servers run on your Node if you have one; otherwise pure downloads the current Node.js LTS
-once, into the same folder. Go, Ruby, and Haskell servers only ship through their language's own
-tools, which anyone writing those languages already has.
+once, into the same folder. Java and Kotlin servers run on your Java if it's new enough;
+otherwise pure downloads a Temurin runtime once. A few servers run on their language itself (Go,
+Ruby, Haskell, Elixir, Swift), which anyone writing that language already has; if it's missing,
+the install says so before downloading anything.
 
 ## Installing, updating, and removing
 
@@ -61,8 +63,9 @@ tools, which anyone writing those languages already has.
   before updating. "Update language servers" in the palette updates them all now.
 - Everything lives in `~/.local/share/nvim/servers`. Delete that folder to remove them all.
 
-Downloads are checked against the SHA-256 their project publishes. taplo's and the Kotlin
-server's current releases don't publish one; those rely on the secure download alone.
+Every download is checked against a SHA-256: the one its project publishes, or, for the Kotlin
+server, whose project publishes none, one pinned in its recipe. A download that can't be checked
+isn't installed. npm, go, and gem check their own packages.
 
 A server you install yourself, with any package manager, is used as is: pure only installs what
 it can't find on `PATH`, and leaves updating yours to you.
