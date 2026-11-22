@@ -41,7 +41,9 @@ keep each change to what it needs.
   `./x update`.
 - `.github/workflows/`: CI, releases, and weekly upkeep (`dependencies.yml`): plugin updates and
   the language server recipe check.
-- `.github/release/`: the release helper and the checks every release must pass.
+- `.github/release/`: the release helper, the checks every release must pass, and the script
+  that writes release notes into `CHANGELOG.md`. Never edit the changelog by hand; releases
+  write it.
 
 ## Conventions
 

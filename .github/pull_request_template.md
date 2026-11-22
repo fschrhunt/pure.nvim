@@ -6,4 +6,4 @@
 
 - `./x check` —
 
-<!-- Include what you tried in Neovim and any limitations. Update the README and changelog for user-visible changes. -->
+<!-- Include what you tried in Neovim and any limitations. Update the README and `docs/` for user-visible changes. -->

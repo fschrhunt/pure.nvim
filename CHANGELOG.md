@@ -1,5 +1,8 @@
 # Changelog
 
+Written by each release, newest first; the same notes are on
+[GitHub Releases](https://github.com/fschrhunt/pure.nvim/releases).
+
 ## Unreleased
 
 - Add the `pure` color scheme: a soft dark color table that leaves the background to the terminal.

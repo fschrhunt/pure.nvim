@@ -12,8 +12,8 @@ tree-sitter CLI with a C compiler.
 ```
 
 `./x` defaults to `check`; run `./x help` for the other commands. See [AGENTS.md](AGENTS.md) for
-where things live and the conventions. Update the README, `docs/`, and the changelog when behavior
-changes.
+where things live and the conventions. Update the README and `docs/` when behavior
+changes; release notes are written when releasing.
 
 Never include credentials or private file contents in issue reports. For bugs, include the
 operating system, terminal, `nvim --version`, what you did, and what happened.
@@ -32,17 +32,19 @@ GitHub Actions updates. Review changes and required checks before merging.
 From a clean, up-to-date `main` checkout with Git and authenticated `gh`, run:
 
 ```sh
-.github/release/release.sh v1.2.3            # opens a PR to name the Unreleased changelog section
-.github/release/release.sh --dry-run v1.2.3  # after merging: verify the release without publishing
-.github/release/release.sh v1.2.3            # after merging and updating main: requests the release
+.github/release/release.sh --dry-run v1.2.3  # show the changelog it would write; publishes nothing
+.github/release/release.sh v1.2.3            # write the notes, then release
 ```
 
-The helper keeps the checkout on main, requires passing CI on its exact commit, and asks Actions
-to publish. The [release workflow](.github/workflows/release.yml) checks that main has not moved,
-then runs `.github/release/verify.sh`, which rejects tags outside `main`'s history, commits
-without passing main CI, and missing, duplicate, or empty changelog sections. It then creates the
-tag and a GitHub release with that version's changelog notes. A maintainer can also push a valid
-tag directly; it goes through the same checks. Use a new stable semantic version with no leading
-zeros. Existing releases are never overwritten, and published tags are protected from moving.
+The helper drafts the notes from the pull requests merged since the last release and opens them
+in your editor; what you save is published. It requires passing CI on the exact `main` commit
+and asks the [release workflow](.github/workflows/release.yml) to release it. The workflow checks
+that main has not moved and runs `.github/release/verify.sh`, which rejects invalid or existing
+tags and commits without passing main CI. It then adds the notes to `CHANGELOG.md` in a release
+commit on top of that main commit, tags it, publishes a GitHub release with the same notes, and
+opens a `release/v1.2.3` pull request that brings the changelog to `main`; merge it after CI
+passes. `CHANGELOG.md` is never edited by hand. Use a new stable semantic version with no
+leading zeros. Existing releases are never overwritten, and published tags are protected from
+moving.
 
 By contributing you agree that your work is licensed under the project's MIT license.
