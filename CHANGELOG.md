@@ -46,5 +46,5 @@
   list stays on `Ctrl-o` and `Ctrl-i`.
 - Ask before installing a missing language server, in a toast with Yes and No buttons that answer
   to `Space y` / `Space n` or a click, never take the cursor, and close on their own. Floating
-  panels are solid blocks with no outline. A blue bar down the left marks panels that want your
-  input: asking toasts and the picker's prompt.
+  panels are solid blocks with no outline and a blue bar down the left side; toasts sit in the
+  bottom-right corner, and Space is shown as the spacebar icon.

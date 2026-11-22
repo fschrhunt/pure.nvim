@@ -2,7 +2,7 @@
 
 Every language gets syntax colors, and the 25 below also get a language server for errors,
 completion, and go to definition. Nothing is installed without asking: open a file whose language
-server is missing, and a toast in the top-right corner asks whether to install it. Press `Space y`
+server is missing, and a toast in the bottom-right corner asks whether to install it. Press `Space y`
 or click Yes to install it, `Space n` or No to skip. The toast never takes the cursor and closes on
 its own if you ignore it; `:install` works any time later.
 
