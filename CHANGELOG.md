@@ -14,3 +14,5 @@
   typing and formatting on save through Prettier or the language server.
 - Add tree-sitter highlighting and folding for the configured languages.
 - Use Neovim 0.12's experimental message UI, undo history, and file comparison.
+- Configure language servers and formatting in pure.nvim's own files instead of nvim-lspconfig
+  and conform.nvim, leaving mini.nvim and nvim-treesitter as the only plugins.

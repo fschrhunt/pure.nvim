@@ -18,9 +18,10 @@ keep each change to what it needs.
 
 - `init.lua`: loads the modules below in order.
 - `lua/pure/options.lua`: options, clipboard, and automatic behavior.
-- `lua/pure/plugins.lua`: the plugin list for `vim.pack` and mini.nvim setup.
+- `lua/pure/plugins.lua`: the two plugins for `vim.pack` and mini.nvim setup.
 - `lua/pure/syntax.lua`: tree-sitter parsers, highlighting, and folding.
-- `lua/pure/code.lua`: language servers, diagnostics, completion, and formatting.
+- `lua/pure/code.lua`: which language servers start, diagnostics, completion, and formatting.
+- `lsp/`: one file per language server with its command, file types, and settings.
 - `lua/pure/actions.lua`: every action, its Space key, and the command palette.
 - `colors/pure.lua`: the color scheme.
 - `nvim-pack-lock.json`: plugin revisions, written by `vim.pack`. Don't edit it by hand; run

@@ -1,7 +1,9 @@
 # pure.nvim
 
-A clean, intuitive Neovim. Built on what Neovim 0.12 ships with, plus four plugins for what it
-doesn't: icons and a picker, tree-sitter parsers, language server settings, and formatting.
+A clean, intuitive Neovim. Built on what Neovim 0.12 ships with, plus two plugins for what it
+can't do alone: [mini.nvim](https://github.com/nvim-mini/mini.nvim) for icons, the picker, the file
+explorer, and git changes, and [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
+for syntax. Language servers and formatting are configured here, in plain files.
 
 Nothing on screen but your code. There's no status bar until you split, no file tree, and no
 background color: the `pure` color scheme draws text on whatever background your terminal has.
@@ -62,8 +64,8 @@ Configured languages: Go, TypeScript and JavaScript, Astro, Python, Lua, and she
 - Add an action with one line in `lua/pure/actions.lua`. It shows up in the palette and gets its
   key there.
 - Change a color once in the palette table at the top of `colors/pure.lua`.
-- Add a language by listing its parser in `lua/pure/syntax.lua` and its server in
-  `lua/pure/code.lua`.
+- Add a language with its parser in `lua/pure/syntax.lua`, a short `lsp/<server>.lua` file, and
+  the server's name in `lua/pure/code.lua`.
 
 ## License
 
