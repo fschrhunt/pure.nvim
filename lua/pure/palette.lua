@@ -1,5 +1,5 @@
--- Picker: one small fuzzy list for everything that asks you to pick something,
--- such as files, text search, problems, help, the command palette, and
+-- Palette: one small fuzzy list for everything that asks you to pick
+-- something: the command palette, files, text search, problems, help, and
 -- Neovim's own "pick one" menus (vim.ui.select). Two stacked panels: a prompt
 -- with the title, and the list with a "matches - total" counter.
 --
@@ -13,9 +13,9 @@
 -- of being filtered; `hint_col` draws the rest of each line in a quieter color.
 
 local M = {}
-local ns = vim.api.nvim_create_namespace('pure.picker')
+local ns = vim.api.nvim_create_namespace('pure.palette')
 
--- Open a file item in the window the picker was opened from.
+-- Open a file item in the window the palette was opened from.
 local function open_file(item, how)
   vim.cmd[how](vim.fn.fnameescape(item.path))
   if item.lnum then
@@ -58,7 +58,7 @@ function M.open(opts)
   })
   vim.bo[prompt_buf].autocomplete = false -- the completion menu would cover the list
   vim.api.nvim_buf_set_extmark(prompt_buf, ns, 0, 0, {
-    virt_text = { { '› ', 'PurePickerPrefix' } },
+    virt_text = { { '› ', 'PurePalettePrefix' } },
     virt_text_pos = 'inline',
     right_gravity = false,
   })
@@ -99,11 +99,11 @@ function M.open(opts)
         vim.hl.range(list_buf, ns, mark.icon_hl, { r, 1 }, { r, offset })
       end
       if opts.hint_col and #mark.text > opts.hint_col then
-        vim.hl.range(list_buf, ns, 'PurePickerHint', { r, offset + opts.hint_col }, { r, -1 })
+        vim.hl.range(list_buf, ns, 'PurePaletteHint', { r, offset + opts.hint_col }, { r, -1 })
       end
       for _, char in ipairs(mark.positions or {}) do
         local byte = offset + vim.str_byteindex(mark.text, 'utf-32', char)
-        vim.hl.range(list_buf, ns, 'PurePickerMatch', { r, byte }, { r, byte + 1 })
+        vim.hl.range(list_buf, ns, 'PurePaletteMatch', { r, byte }, { r, byte + 1 })
       end
       if mark.i == current then
         vim.api.nvim_buf_set_extmark(
@@ -111,7 +111,7 @@ function M.open(opts)
           ns,
           r,
           0,
-          { line_hl_group = 'PurePickerCurrent', priority = 10 }
+          { line_hl_group = 'PurePaletteCurrent', priority = 10 }
         )
       end
     end
@@ -119,7 +119,7 @@ function M.open(opts)
       or ('%d - %d'):format(#matches, opts.live and #matches or #items)
     vim.api.nvim_win_set_config(
       list_win,
-      { footer = { { ' ' .. counter .. ' ', 'PurePickerCounter' } }, footer_pos = 'right' }
+      { footer = { { ' ' .. counter .. ' ', 'PurePaletteCounter' } }, footer_pos = 'right' }
     )
   end
 
@@ -214,7 +214,7 @@ function M.open(opts)
   map('<C-s>', function() choose('split') end)
   map('<Esc>', cancel)
 
-  local group = vim.api.nvim_create_augroup('pure.picker', {})
+  local group = vim.api.nvim_create_augroup('pure.palette', {})
   vim.api.nvim_create_autocmd('TextChangedI', {
     group = group,
     buffer = prompt_buf,
@@ -367,7 +367,7 @@ function M.git_changes()
   M.open({ title = 'Git changes', items = items })
 end
 
--- vim.ui.select, so Neovim's own menus (like code actions) use the picker.
+-- vim.ui.select, so Neovim's own menus (like code actions) open as a palette.
 -- Extra opts (width, height, hint_col) pass through to M.open.
 function M.select(choices, opts, on_choice)
   opts = opts or {}

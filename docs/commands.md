@@ -37,7 +37,7 @@ A few words already meant something in Neovim and now run the action above inste
 | --- | --- | --- |
 | `:b` | Switch to an open buffer | `:recent` lists open files first |
 | `:f` | Show the file name | The tab title shows it |
-| `:find` | Find a file on `'path'` | Same idea, with a picker |
+| `:find` | Find a file on `'path'` | Same idea, in a palette |
 | `:close` | Close the window | Same, and closes the file when there's one window |
 
 The long forms of Neovim's commands, like `:buffer` and `:file`, are untouched.

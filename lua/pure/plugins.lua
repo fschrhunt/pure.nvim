@@ -1,6 +1,6 @@
 -- Plugins: installs the two plugins with Neovim's built-in vim.pack (versions
 -- pinned in nvim-pack-lock.json) and sets up mini.nvim's icons, file explorer,
--- git changes and Space-key hints. The picker is our own (pure.picker), and
+-- git changes and Space-key hints. Palettes are our own (pure.palette), and
 -- nvim-treesitter is configured in pure.syntax. See docs/plugins.md.
 
 local group = vim.api.nvim_create_augroup('pure.plugins', {})
@@ -20,7 +20,7 @@ vim.api.nvim_create_autocmd('PackChanged', {
 })
 
 vim.pack.add({
-  'https://github.com/nvim-mini/mini.nvim', -- icons, picker, file explorer, git changes
+  'https://github.com/nvim-mini/mini.nvim', -- icons, file explorer, git changes, key hints
   { src = 'https://github.com/nvim-treesitter/nvim-treesitter', version = 'main' }, -- parsers
 }, { confirm = false })
 

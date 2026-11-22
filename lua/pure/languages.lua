@@ -1,10 +1,10 @@
--- Code: language servers, how their problems are shown, completion while
+-- Languages: language servers, how their problems are shown, completion while
 -- typing, and formatting on save. Each language has a file in lsp/, named
 -- after it, with its server's command and how to install it. Installed servers
--- start on their own; opening a file whose server is missing shows a toast,
--- and :install runs the install command. See docs/languages.md.
+-- start on their own; opening a file whose server is missing asks in a toast
+-- whether to install it, and :install does it any time. See docs/languages.md.
 
-local group = vim.api.nvim_create_augroup('pure.code', {})
+local group = vim.api.nvim_create_augroup('pure.languages', {})
 
 -- Language servers ----------------------------------------------------------
 

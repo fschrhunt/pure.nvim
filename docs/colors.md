@@ -1,11 +1,11 @@
 # Colors
 
 `pure` is a soft, dark color scheme. Code sits on whatever background your terminal has, and
-floating panels (the palette, pickers, completion, key hints, and toasts) are solid blocks of a
+floating panels (palettes, completion, key hints, and toasts) are solid blocks of a
 surface color with padding, no outline, and a thin blue bar down the left side. The completion
 menu, which opens as you type, gets the padding without the bar. It lives in one file, `colors/pure.lua`.
 
-## The palette
+## The color table
 
 Every color in the scheme comes from this table at the top of the file. Change a value there and
 it changes everywhere.
@@ -15,7 +15,7 @@ it changes everywhere.
 | `text` | `#d4d9e8` | Plain text, variables, function calls |
 | `muted` | `#7f87a2` | Comments, quiet interface text |
 | `faint` | `#454b63` | Line numbers, borders, dividers |
-| `surface` | `#1c2031` | Floating panels: palette, pickers, completion, key hints, toasts |
+| `surface` | `#1c2031` | Floating panels: palettes, completion, key hints, toasts |
 | `shade` | `#2b3047` | Selections and the current item in a list |
 | `ink` | `#171a26` | Dark text on bright highlights, like search matches |
 | `purple` | `#b79cf2` | Keywords, in italics |
@@ -36,14 +36,14 @@ brackets stay in the plain text color, so code reads calmly instead of as a rain
 elements use the grays. Things that float above your code get a panel; things that are part of the
 layout, like splits and the file explorer's columns, stay transparent.
 
-The same palette colors file icons, the picker, the file explorer, the Space-key hints, git
+The same colors are used for file icons, palettes, the file explorer, the Space-key hints, git
 changes, and diagnostics, so plugins look like part of the editor.
 
 ## Changing it
 
-- To adjust a color, change its hex value in the palette table.
+- To adjust a color, change its hex value in the color table.
 - To change what something looks like, find its group in the `groups` table, such as `Comment` or
-  `Function`, and point it at a different palette color.
+  `Function`, and point it at a different color.
 - To find the group for something on screen, put the cursor on it and run `:Inspect`.
 
 Restart Neovim, or run `:colorscheme pure`, to see a change.

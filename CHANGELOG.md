@@ -2,49 +2,27 @@
 
 ## Unreleased
 
-- Add the `pure` color scheme: a soft dark palette that leaves the background to the terminal and
-  colors file icons, the picker, and the file explorer to match.
-- Add a command palette (`Space p`) built from one list of actions, which also maps the Space
-  keys.
-- Keep Space keys for everyday actions only, listed in a hint window when you press Space and
-  pause; other actions are in the palette.
-- Add finding files, recent files, project search, a side-by-side file explorer, and git change
-  markers with mini.nvim.
-- Add language servers for Go, TypeScript, Astro, Python, Lua, and shell, with completion while
-  typing and formatting on save through Prettier or the language server.
-- Add tree-sitter highlighting and folding for the configured languages.
-- Use Neovim 0.12's experimental message UI, undo history, and file comparison.
-- Configure language servers and formatting in pure.nvim's own files instead of nvim-lspconfig
-  and conform.nvim, leaving mini.nvim and nvim-treesitter as the only plugins.
-- Add docs for keys, languages, colors, and plugins, and `./x sync` to install the plugin
-  versions recorded in the lockfile.
-- Go back and forward with `Space [` and `Space ]`, and through folders in the file explorer with
-  `[` and `]`. Each action has one key: the explorer's `h` and `l` and the `:W` and `:Q` typo
-  commands are gone.
-- Turn off duplicate and hidden plugin keys: mini.diff's `gh`, `gH`, `[H`, and `]H`, the explorer's
-  extra keys, and the picker's `Ctrl-n`, `Ctrl-p`, marking, and scrolling keys. `Esc` closes the
-  explorer like the picker. Recent files lists open files first, replacing "Open files".
-- `Space q` closes what you're looking at: the split if the screen is split, otherwise the file.
-  `Space x` is gone. Pressing `g` and pausing lists the code, comment, and link keys.
-- Add plain-word commands for everyday actions, such as `:back` (`:b`), `:forward` (`:f`), `:find`,
-  `:search`, `:close`, and `:palette`; the palette shows each action's command. Neovim's netrw
-  explorer is no longer loaded.
-- Show the command palette as a compact list near the top of the screen, with keys and commands
-  in a quieter color, and cap the other pickers' size on wide screens.
-- Support 25 languages with one file each in `lsp/`, named after the language. Missing language
-  servers are suggested in a toast instead of being expected up front, and `:install` installs
-  the one for the current file. Tree-sitter parsers build the first time a language is opened.
-  Messages appear as toasts in the corner. Python formats with ruff when it's installed.
-- Give floating panels a solid surface with padding instead of an outline: the palette, pickers,
-  completion, key hints, and toasts. Code and the file explorer stay on the terminal background.
-- Replace mini.pick and mini.extra with a small picker of our own: a prompt panel and a list
-  panel with a "matches - total" counter, used for files, recent files, text search, problems,
-  help, git changes, the palette, and Neovim's own menus.
-- `Space [` and `Space ]` go back and forward through the places you've been, files and explorer
-  folders, like a browser, so going back from a file opened in the explorer returns to its folder.
-  `Space e` is gone; the explorer is `:explore` or "Browse folder" in the palette. Neovim's jump
-  list stays on `Ctrl-o` and `Ctrl-i`.
-- Ask before installing a missing language server, in a toast with Yes and No buttons that answer
-  to `Space y` / `Space n` or a click, never take the cursor, and close on their own. Floating
-  panels are solid blocks with no outline and a blue bar down the left side; toasts sit in the
-  bottom-right corner, and Space is shown as the spacebar icon.
+- Add the `pure` color scheme: a soft dark color table that leaves the background to the terminal.
+  Floating panels are solid blocks with no outline and a blue bar down the left side.
+- Add palettes, one fuzzy list for everything you pick from: the command palette (`Space p`),
+  files, recent files (open files first), project search, problems, help, git changes, and
+  Neovim's own menus. Their corner shows matches - total.
+- Build the command palette, the Space keys, and plain-word commands like `:find` and `:close`
+  from one list of actions, so each action has one name and at most one key. Pressing Space or `g`
+  and pausing lists the keys that can follow.
+- Go back and forward with `Space [` and `Space ]` through the places you've been, files and
+  folders, like a browser. `Space q` closes the split, or the file when there's one window.
+- Add a full-height file explorer with a preview (`:explore`): `[` and `]` move through folders,
+  `Enter` opens a file, and edits apply with `=`.
+- Support 25 languages, one file each in `lsp/`, named after the language. Missing language
+  servers are offered in a toast with Yes and No buttons (`Space y` / `Space n`, or a click), and
+  `:install` installs one any time. Completion while typing, problems on the current line, and
+  formatting on save through Prettier, ruff, or the language server.
+- Highlight and fold every language nvim-treesitter supports, building each parser the first time
+  its language is opened.
+- Show messages as toasts in the bottom-right corner, and use Neovim 0.12's undo history and file
+  comparison.
+- Rely on two plugins, mini.nvim and nvim-treesitter, pinned in `nvim-pack-lock.json`; `./x
+  update` updates them and `./x sync` installs the pinned versions. Plugin updates are proposed
+  weekly.
+- Document keys, commands, languages, colors, and plugins in `docs/`.

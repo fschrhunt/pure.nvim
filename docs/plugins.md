@@ -7,8 +7,8 @@ pure.nvim uses what Neovim ships with wherever it can, and two plugins for what 
 | [mini.nvim](https://github.com/nvim-mini/mini.nvim) | File icons, the file explorer, git change markers, and key hints | Each piece is a real program, like the file explorer's 3,000 lines. It's one download, and only the modules we set up are loaded. |
 | [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) | Builds language parsers and ships the syntax rules for each language | The syntax rules are thousands of files maintained alongside the parsers. |
 
-Everything else is Neovim's own or a short file in this repository: the picker in
-`lua/pure/picker.lua`, the language servers in `lsp/`, formatting in `lua/pure/code.lua`, the
+Everything else is Neovim's own or a short file in this repository: palettes in
+`lua/pure/palette.lua`, the language servers in `lsp/`, formatting in `lua/pure/languages.lua`, the
 command palette, completion, the clipboard, undo history, and the color scheme.
 
 ## Versions
