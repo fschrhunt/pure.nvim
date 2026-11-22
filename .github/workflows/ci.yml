@@ -15,13 +15,25 @@ concurrency:
 
 jobs:
   check:
-    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: Install Neovim, StyLua and tree-sitter
-        run: brew install neovim stylua tree-sitter
-      - name: Check
-        run: ./x check
+      # Homebrew has current Neovim on both systems; Linux runners ship it off PATH.
+      - name: Install tools
+        run: |
+          if [ "$RUNNER_OS" = Linux ]; then
+            eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+            echo "$HOMEBREW_PREFIX/bin" >> "$GITHUB_PATH"
+          fi
+          brew install neovim stylua shellcheck actionlint tree-sitter
+      - name: Check workflow syntax
+        if: runner.os == 'Linux'
+        run: actionlint .github/workflows/*.yml
+      - run: ./x check

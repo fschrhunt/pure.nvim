@@ -1,0 +1,63 @@
+name: Dependencies
+
+# Dependabot can't read nvim-pack-lock.json, so this proposes plugin updates
+# weekly as one pull request that is refreshed until merged.
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  plugins:
+    name: Update plugins
+    runs-on: macos-latest
+    timeout-minutes: 15
+    permissions:
+      actions: write
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install Neovim
+        run: brew install neovim
+      - name: Update plugins
+        run: ./x update
+      - name: Propose the update
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git diff --quiet -- nvim-pack-lock.json && { echo 'Plugins are up to date.'; exit 0; }
+
+          # One compare link per changed plugin, so each update can be reviewed.
+          jq -r --slurpfile old <(git show HEAD:nvim-pack-lock.json) '
+            .plugins | to_entries[]
+            | select(.value.rev != $old[0].plugins[.key].rev)
+            | "- [\(.key)](\(.value.src)/compare/\($old[0].plugins[.key].rev)...\(.value.rev))"
+          ' nvim-pack-lock.json > "$RUNNER_TEMP/body.md"
+          printf '\nReview each change, then merge after CI passes.\n' >> "$RUNNER_TEMP/body.md"
+
+          branch=deps/plugins
+          git switch -c "$branch"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git -c core.hooksPath=/dev/null commit -qm 'chore(deps): update plugins' -- nvim-pack-lock.json
+          git -c credential.helper= -c 'credential.helper=!gh auth git-credential' \
+            push --force origin "HEAD:refs/heads/$branch"
+          if gh pr view "$branch" --json state --jq .state 2>/dev/null | grep -qx OPEN; then
+            gh pr edit "$branch" --body-file "$RUNNER_TEMP/body.md"
+          else
+            gh pr create --base main --head "$branch" --title 'chore(deps): update plugins' \
+              --body-file "$RUNNER_TEMP/body.md"
+          fi
+          # Pushes made with the automatic token don't start CI; request it for the PR's commit.
+          gh workflow run ci.yml --ref "$branch"

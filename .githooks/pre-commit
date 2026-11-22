@@ -1,0 +1,10 @@
+#!/bin/sh
+# Reject staged Lua files that StyLua would reformat.
+set -eu
+git diff --cached --name-only --diff-filter=ACMR -- '*.lua' | while IFS= read -r path; do
+    [ -n "$path" ] || continue
+    if ! git show ":$path" | stylua --check --stdin-filepath "$path" - >/dev/null; then
+        printf 'pre-commit: run ./x fmt and restage %s\n' "$path" >&2
+        exit 1
+    fi
+done

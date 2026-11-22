@@ -1,0 +1,75 @@
+name: Release
+
+# A reviewed release can be dispatched from main or started by a maintainer-pushed tag.
+# Either way, the release is published in this run with the automatic token.
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Stable version, such as v1.2.3
+        required: true
+        type: string
+      commit:
+        description: Full SHA of the checked main commit
+        required: true
+        type: string
+      dry_run:
+        description: Verify the release without tagging or publishing
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  TAG: ${{ inputs.tag || github.ref_name }}
+  COMMIT: ${{ inputs.commit || github.sha }}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event_name == 'push' && github.sha || 'main' }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Require that main has not moved
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          [ "$GITHUB_REF" = refs/heads/main ] || { echo 'Dispatch releases from main.' >&2; exit 1; }
+          [ "$COMMIT" = "$GITHUB_SHA" ] || { echo 'Main changed after the release was requested; retry.' >&2; exit 1; }
+      - name: Check the tag, changelog, and CI
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: .github/release/verify.sh "$TAG" "$COMMIT"
+
+  publish:
+    needs: check
+    if: github.repository == 'fschrhunt/pure.nvim' && !inputs.dry_run
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.COMMIT }}
+          persist-credentials: false
+      - name: Publish the release with changelog notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          awk -v tag="$TAG" '/^## / { section = ($2 == tag); next } section' CHANGELOG.md > "$RUNNER_TEMP/notes.md"
+          test -s "$RUNNER_TEMP/notes.md"
+          gh release create "$TAG" --target "$COMMIT" --title "$TAG" --notes-file "$RUNNER_TEMP/notes.md"

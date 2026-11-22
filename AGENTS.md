@@ -7,9 +7,11 @@ keep each change to what it needs.
 ## Commands
 
 ```sh
-./x check     # StyLua formatting and a headless load of the config; CI runs the same check
+./x check     # StyLua, ShellCheck, and a headless load of the config; CI runs the same checks
 ./x fmt       # format Lua files
+./x update    # update plugins and nvim-pack-lock.json
 ./x install   # link ~/.config/nvim to this checkout
+./x hooks     # install the pre-commit hook once per clone
 ```
 
 ## Where things live
@@ -21,7 +23,10 @@ keep each change to what it needs.
 - `lua/pure/code.lua`: language servers, diagnostics, completion, and formatting.
 - `lua/pure/actions.lua`: every action, its Space key, and the command palette.
 - `colors/pure.lua`: the color scheme.
-- `nvim-pack-lock.json`: plugin revisions, written by `vim.pack`. Don't edit it by hand.
+- `nvim-pack-lock.json`: plugin revisions, written by `vim.pack`. Don't edit it by hand; run
+  `./x update`.
+- `.github/workflows/`: CI, releases, and weekly plugin updates (`dependencies.yml`).
+- `.github/release/`: the release helper and the checks every release must pass.
 
 ## Conventions
 

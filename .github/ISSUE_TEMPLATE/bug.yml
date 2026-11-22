@@ -1,0 +1,19 @@
+name: Bug
+description: Something does not work as documented.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps that show it
+      description: The file type, keys pressed, and any message shown. Remove private paths and other sensitive details.
+  - type: input
+    id: environment
+    attributes:
+      label: Operating system, terminal, and `nvim --version`
