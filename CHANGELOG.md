@@ -24,3 +24,5 @@
 - Turn off duplicate and hidden plugin keys: mini.diff's `gh`, `gH`, `[H`, and `]H`, the explorer's
   extra keys, and the picker's `Ctrl-n`, `Ctrl-p`, marking, and scrolling keys. `Esc` closes the
   explorer like the picker. Recent files lists open files first, replacing "Open files".
+- `Space q` closes what you're looking at: the split if the screen is split, otherwise the file.
+  `Space x` is gone. Pressing `g` and pausing lists the code, comment, and link keys.

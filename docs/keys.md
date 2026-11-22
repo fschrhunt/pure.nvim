@@ -17,10 +17,9 @@ key.
 | `Space r` | Recent files: open files first, then the ones you had open before |
 | `Space d` | Show problems |
 | `Space w` | Save |
-| `Space q` | Close the file (asks before discarding changes) |
+| `Space q` | Close what you're looking at: the split if the screen is split, otherwise the file (asking before discarding changes) |
 | `Space -` | Split below |
 | `Space +` | Split right |
-| `Space x` | Close the window |
 | `Space ?` | Search Neovim's help |
 | `Space [` | Go back to where you were, across files |
 | `Space ]` | Go forward again |
@@ -61,7 +60,8 @@ Copying (`y`) also copies to the system clipboard. Paste from the system with `C
 
 ## Code
 
-These work once a language server is running for the file; see [languages](languages.md).
+These work once a language server is running for the file; see [languages](languages.md). Press
+`g` and pause to see them listed, along with comment (`gc`) and open link (`gx`).
 
 | Key | Does |
 | --- | --- |
