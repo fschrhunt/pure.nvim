@@ -58,9 +58,9 @@ vim.api.nvim_create_autocmd('CmdlineChanged', {
   callback = function() vim.fn.wildtrigger() end,
 })
 
--- Copying sends text to the system clipboard over OSC 52. Pasting from the
--- system is left to the terminal (Cmd-V) because Rex can't answer OSC 52
--- reads yet; once it can, replace this with clipboard=unnamedplus.
+-- Copying sends text to the system clipboard over OSC 52, which most terminals
+-- support, even over SSH. Pasting from the system is left to the terminal
+-- (Cmd-V), since fewer terminals answer OSC 52 reads.
 vim.o.clipboard = ''
 vim.g.termfeatures = vim.tbl_extend('force', vim.g.termfeatures or {}, { osc52 = false })
 local copy_to_clipboard = require('vim.ui.clipboard.osc52').copy('+')

@@ -52,3 +52,5 @@ keep each change to what it needs.
   `docs/keys.md`.
 - Name autocommand groups `pure.<module>`.
 - Update `docs/` and the README in the same change as the behavior they describe.
+- Describe pure.nvim on its own terms. Name other tools only where pure.nvim runs or installs
+  them, never as a comparison or inspiration.
