@@ -40,3 +40,7 @@
 - Replace mini.pick and mini.extra with a small picker of our own: a prompt panel and a list
   panel with a "matches - total" counter, used for files, recent files, text search, problems,
   help, git changes, the palette, and Neovim's own menus.
+- `Space [` and `Space ]` go back and forward through the places you've been, files and explorer
+  folders, like a browser, so going back from a file opened in the explorer returns to its folder.
+  `Space e` is gone; the explorer is `:explore` or "Browse folder" in the palette. Neovim's jump
+  list stays on `Ctrl-o` and `Ctrl-i`.

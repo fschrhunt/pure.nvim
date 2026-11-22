@@ -5,6 +5,7 @@
 -- rest are a palette search away. See docs/keys.md and docs/commands.md.
 
 local picker = require('pure.picker')
+local places = require('pure.places')
 
 local function copy_path()
   local path = vim.fn.expand('%:~:.')
@@ -17,14 +18,12 @@ local function browse_folder()
   MiniFiles.open(vim.uv.fs_stat(file) and file or nil) -- opens on the current file
 end
 
--- Back and forward through the places you've been (Neovim's jump list),
--- across files, like a browser's back and forward buttons. The keys are sent
--- as typed, with Neovim's own meaning: Ctrl-i is the same character as Tab,
--- which :normal can't take as an argument.
+-- Neovim's jump list (every big move, also within a file) stays on its own
+-- Ctrl-o / Ctrl-i. The keys are sent as typed, with Neovim's own meaning:
+-- Ctrl-i is the same character as Tab, which :normal can't take as an argument.
 local function press(keys)
   return function() vim.api.nvim_feedkeys(vim.keycode(keys), 'n', false) end
 end
-local go_back, go_forward = press('<C-o>'), press('<C-i>')
 
 -- Closes what you're looking at: the split when the screen is split, otherwise
 -- the file (asking first if it has unsaved changes).
@@ -61,13 +60,15 @@ end
 -- one-letter form, like :b.
 local actions = {
   -- Getting around
-  { 'Go back', '<leader>[', go_back, cmd = 'back', short = 'b' },
-  { 'Go forward', '<leader>]', go_forward, cmd = 'forward', short = 'f' },
+  { 'Go back', '<leader>[', places.back, cmd = 'back', short = 'b' },
+  { 'Go forward', '<leader>]', places.forward, cmd = 'forward', short = 'f' },
+  { 'Jump back', '<C-o>', press('<C-o>') },
+  { 'Jump forward', '<C-i>', press('<C-i>') },
   -- Files
   { 'Find a file', '<leader>f', picker.files, cmd = 'find' },
   { 'Recent files', '<leader>r', picker.recent, cmd = 'recent' },
   { 'Search text in project', '<leader>/', picker.search, cmd = 'search' },
-  { 'Browse folder', '<leader>e', browse_folder, cmd = 'explore' },
+  { 'Browse folder', false, browse_folder, cmd = 'explore' },
   { 'New file', false, 'enew' },
   { 'Save', '<leader>w', 'write' },
   { 'Save all', false, 'wall' },

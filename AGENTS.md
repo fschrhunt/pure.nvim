@@ -26,6 +26,7 @@ keep each change to what it needs.
 - `lsp/`: one file per language, named after it (`go.lua`, `python.lua`), with its server's
   command, file types, settings, and `install` command.
 - `lua/pure/actions.lua`: every action, its Space key, and the command palette.
+- `lua/pure/places.lua`: the browser-style back and forward history of files and folders.
 - `lua/pure/picker.lua`: the fuzzy picker and its sources (files, recent files, text search,
   problems, help, git changes), and `vim.ui.select`.
 - `colors/pure.lua`: the color scheme.
