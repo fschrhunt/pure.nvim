@@ -12,5 +12,6 @@ return {
       ['linux-x64'] = 'elixir-ls-v{version}.zip',
     },
     bin = 'language_server.sh',
+    needs = 'elixir',
   },
 }

@@ -6,12 +6,22 @@
 --       A release file per system ({version} is the release, without a v).
 --   url = template, files = {...}, sums = template, github = 'owner/repo'
 --       A download from elsewhere, versioned by the GitHub release.
+--   url = address, version = v, sha256 = sum
+--       One pinned download, for projects that publish no checksum.
+--   latest = address, url = template, sums = template
+--       A download whose current file name ({file}) is read from latest.
 --   npm = { packages }, bin = program
 --       Run with your Node, or with a copy downloaded once into the folder.
 --   go = module, gem = name, tool = command
 --       The language's own tool, for servers that only ship that way.
 --
--- Downloads are checked against their published SHA-256 when there is one.
+-- Any recipe can add `needs = 'command'` (checked before downloading) and
+-- `java = 21` (a minimum Java: yours if it's new enough, otherwise a Temurin
+-- runtime downloaded once into the folder).
+--
+-- Every download is checked against a SHA-256: the one its project publishes,
+-- or the recipe's pinned one. A download with neither isn't installed. npm,
+-- go, and gem check their own packages.
 -- The folder's bin/ comes first on PATH, so a program placed there by hand or
 -- by a coding agent is used like an installed one.
 --
@@ -54,10 +64,10 @@ local function run(cmd, opts)
     local output = vim.split(vim.trim((result.stderr or '') .. '\n' .. (result.stdout or '')), '\n')
     error(('%s failed: %s'):format(cmd[1], output[#output]), 0)
   end
-  return result.stdout
+  return result.stdout, result.stderr
 end
 
-local function fetch_json(url) return vim.json.decode(run({ 'curl', '-fsSL', url })) end
+local function fetch_json(url) return vim.json.decode((run({ 'curl', '-fsSL', url }))) end
 
 local function sha256(file)
   local command = vim.fn.executable('sha256sum') == 1 and { 'sha256sum', file }
@@ -80,7 +90,7 @@ local function unpack(file, dir, name)
     run({ 'tar', '-xzf', file, '-C', dir })
   elseif file:match('%.tar%.xz$') then
     run({ 'tar', '-xJf', file, '-C', dir })
-  elseif file:match('%.zip$') then
+  elseif file:match('%.zip$') or file:match('%.sit$') then
     run({ 'unzip', '-q', '-o', file, '-d', dir })
   elseif file:match('%.gz$') then
     run({ 'sh', '-c', 'gunzip -c "$1" > "$2"', 'sh', file, vim.fs.joinpath(dir, name) })
@@ -112,13 +122,50 @@ local function latest_release(repo)
   return fetch_json('https://api.github.com/repos/' .. repo .. '/releases/latest')
 end
 
+-- A release's version: its tag without a prefix like v or name/v.
+local function version_of(release) return (release.tag_name:gsub('^.*/', ''):gsub('^v', '')) end
+
+-- The SHA-256 for a file, from a sums file listing many or holding just one.
+local function sum_for(sums, file)
+  return sums:match('(%x+)%s+%*?' .. vim.pesc(file)) or sums:match('^%s*(%x+)%s*$')
+end
+
+-- Java for servers that run on it: yours if it's at least version min,
+-- otherwise a Temurin runtime downloaded once into the folder: Java 21, the
+-- long-term release every server here runs on, or min if a server needs newer.
+-- Returns the downloaded runtime's home, or nil to use yours.
+local function java_home(min)
+  -- macOS has a java placeholder that fails when no Java is installed.
+  local ok, _, info = pcall(run, { 'java', '-version' })
+  if ok and tonumber(info:match('version "(%d+)') or 0) >= min then
+    return nil
+  end
+  local release = math.max(min, 21)
+  local dir = vim.fs.joinpath(M.dir, 'runtimes', 'java-' .. release)
+  local home = uname.sysname == 'Darwin' and vim.fs.joinpath(dir, 'Contents', 'Home') or dir
+  if vim.uv.fs_stat(vim.fs.joinpath(home, 'bin', 'java')) then
+    return home
+  end
+  local query = ('https://api.adoptium.net/v3/assets/latest/%d/hotspot?os=%s&architecture=%s&image_type=jre'):format(
+    release,
+    uname.sysname == 'Darwin' and 'mac' or 'linux',
+    arch == 'arm64' and 'aarch64' or 'x64'
+  )
+  local package = fetch_json(query)[1].binary.package
+  local file = vim.fn.tempname() .. '.tar.gz'
+  download(package.link, file, package.checksum)
+  vim.fn.mkdir(dir, 'p')
+  run({ 'tar', '-xzf', file, '-C', dir, '--strip-components=1' })
+  return home
+end
+
 -- Node for npm servers: yours if installed, otherwise the current LTS release,
 -- downloaded once into the folder.
 local function node_dir()
   if vim.fn.executable('node') == 1 and vim.fn.executable('npm') == 1 then
     return vim.fs.dirname(vim.fn.exepath('node'))
   end
-  local dir = vim.fs.joinpath(M.dir, 'node')
+  local dir = vim.fs.joinpath(M.dir, 'runtimes', 'node')
   if vim.uv.fs_stat(vim.fs.joinpath(dir, 'bin', 'node')) then
     return vim.fs.joinpath(dir, 'bin')
   end
@@ -139,12 +186,15 @@ end
 -- Installs one server from its recipe; returns the installed version.
 local function install(name, config)
   local recipe, command = config.install, config.cmd[1]
-  local needs = { go = 'Go', gem = 'Ruby', tool = recipe.tool and recipe.tool:match('^%S+') }
-  for key, label in pairs(needs) do
-    if recipe[key] and vim.fn.executable(key == 'tool' and label or key) == 0 then
-      error(('%s needs %s. Install it, then try again.'):format(command, label), 0)
-    end
+  local needs = recipe.needs
+    or recipe.go and 'go'
+    or recipe.gem and 'gem'
+    or recipe.tool and recipe.tool:match('^%S+')
+  if needs and vim.fn.executable(needs) == 0 then
+    error(('%s needs %s. Install it, then try again.'):format(command, needs), 0)
   end
+  local java = recipe.java and java_home(recipe.java)
+  local env = java and { JAVA_HOME = java, path = vim.fs.joinpath(java, 'bin') } or nil
 
   if recipe.npm then
     local node = node_dir()
@@ -181,13 +231,24 @@ local function install(name, config)
     return 'latest'
   end
 
-  -- A release download: from GitHub, or from a URL versioned by GitHub.
+  if not (recipe.github or recipe.url or recipe.latest) then
+    error(
+      ('%s comes with %s; install that to use it.'):format(command, needs or 'its toolchain'),
+      0
+    )
+  end
+
+  -- A release download: from GitHub, from a URL versioned by GitHub, or pinned.
   local file_name = recipe.files and recipe.files[platform]
   if recipe.files and not file_name then
     error(('%s has no download for %s.'):format(command, platform), 0)
   end
   local release = recipe.github and latest_release(recipe.github)
-  local version = release and release.tag_name:gsub('^v', '') or 'latest'
+  local version = release and version_of(release) or recipe.version or 'latest'
+  if recipe.latest then
+    file_name = vim.trim(run({ 'curl', '-fsSL', recipe.latest }))
+    version = file_name:match('%d+%.%d+%.%d+') or file_name
+  end
   local function fill(template)
     return (template:gsub('{version}', version):gsub('{file}', file_name or ''))
   end
@@ -195,26 +256,29 @@ local function install(name, config)
   local url, expected
   if recipe.url then
     url = fill(recipe.url)
-    if recipe.sums then
-      expected = run({ 'curl', '-fsSL', fill(recipe.sums) }):match(
-        '(%x+)%s+' .. vim.pesc(vim.fs.basename(url))
-      )
-    end
+    expected = recipe.sha256
+      or recipe.sums
+        and sum_for(run({ 'curl', '-fsSL', fill(recipe.sums) }), vim.fs.basename(url))
   else
     local asset = vim.iter(release.assets):find(function(a) return a.name == fill(file_name) end)
     if not asset then
       error(('%s %s has no file %s.'):format(command, version, fill(file_name)), 0)
     end
-    url, expected = asset.browser_download_url, asset.digest and asset.digest:match('^sha256:(%x+)')
+    -- GitHub sends a missing digest as JSON null (vim.NIL).
+    local digest = type(asset.digest) == 'string' and asset.digest:match('^sha256:(%x+)')
+    url, expected = asset.browser_download_url, digest or nil
   end
 
+  if not expected then
+    error(("%s has no published checksum, so pure won't install it unchecked."):format(command), 0)
+  end
   local folder = vim.fs.joinpath(M.dir, name)
   local file = vim.fs.joinpath(vim.fn.tempname(), vim.fs.basename(url))
   vim.fn.mkdir(vim.fs.dirname(file), 'p')
   download(url, file, expected)
   vim.fn.delete(folder, 'rf')
   unpack(file, folder, command)
-  link(command, vim.fs.joinpath(folder, fill(recipe.bin or command)))
+  link(command, vim.fs.joinpath(folder, fill(recipe.bin or command)), env)
   return version
 end
 
@@ -238,7 +302,9 @@ function M.installed() return read_record().servers end
 -- The newest version a recipe can tell, without installing anything.
 local function latest_version(recipe)
   if recipe.github then
-    return latest_release(recipe.github).tag_name:gsub('^v', '')
+    return version_of(latest_release(recipe.github))
+  elseif recipe.latest then
+    return vim.trim(run({ 'curl', '-fsSL', recipe.latest })):match('%d+%.%d+%.%d+')
   elseif recipe.npm and vim.fn.executable('npm') == 1 then
     return vim.trim(run({ 'npm', 'view', recipe.npm[1], 'version' }))
   end

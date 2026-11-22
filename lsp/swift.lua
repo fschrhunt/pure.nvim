@@ -1,8 +1,8 @@
--- Swift: sourcekit-lsp, which ships with the Swift toolchain.
+-- Swift: sourcekit-lsp, which ships with the Swift toolchain: on macOS, Apple's
+-- command line tools; elsewhere, Swift itself.
 return {
   cmd = { 'sourcekit-lsp' },
   filetypes = { 'swift' },
   root_markers = { 'Package.swift', '.git' },
-  -- Comes with the Swift toolchain; there's nothing to download separately.
-  install = { tool = 'xcode-select --install' },
+  install = vim.fn.has('mac') == 1 and { tool = 'xcode-select --install' } or { needs = 'swift' },
 }
