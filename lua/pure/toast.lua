@@ -25,8 +25,8 @@ end
 function M.ask(opts)
   dismiss()
 
-  -- Lines: title, message, a blank line, then the buttons. One space of
-  -- padding on each side, inside the rounded border.
+  -- Lines: title, message, a blank line, then the buttons, with one space of
+  -- padding on each side.
   local yes, no = ' Yes  Space y ', ' No  Space n '
   local buttons = ' ' .. yes .. '  ' .. no
   local lines = { ' ' .. opts.title, ' ' .. opts.message, '', buttons }
@@ -53,7 +53,17 @@ function M.ask(opts)
     width = width,
     height = #lines,
     style = 'minimal',
-    border = 'rounded',
+    -- A colored bar down the left side, padding elsewhere, no outline.
+    border = {
+      { '┃', 'PureToastAccent' },
+      ' ',
+      ' ',
+      ' ',
+      ' ',
+      ' ',
+      { '┃', 'PureToastAccent' },
+      { '┃', 'PureToastAccent' },
+    },
     zindex = 60,
   })
 

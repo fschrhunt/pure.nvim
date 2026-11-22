@@ -46,4 +46,4 @@
   list stays on `Ctrl-o` and `Ctrl-i`.
 - Ask before installing a missing language server, in a toast with Yes and No buttons that answer
   to `Space y` / `Space n` or a click, never take the cursor, and close on their own. Floating
-  panels get rounded outlines again, and the picker's prompt and list join into one card.
+  panels are solid blocks with no outline, and toasts have a blue bar down their left side.
