@@ -156,6 +156,7 @@ local groups = {
   MiniPickPromptPrefix = { fg = c.purple },
   MiniPickHeader = { fg = c.muted },
   MiniPickPreviewLine = { bg = c.shade },
+  PurePaletteHint = { fg = c.muted }, -- keys and commands in the command palette
   MiniFilesCursorLine = { bg = c.shade, bold = true },
   MiniFilesTitle = { fg = c.muted },
 
