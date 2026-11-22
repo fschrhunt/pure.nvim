@@ -1,7 +1,6 @@
 -- Panels: how floating windows look. Each is a solid block of the panel color
 -- with padding and a blue bar down its left side, and no outline. The bar sits
--- on the terminal's own background, so a sliver of it shows between the bar
--- and the panel, as in OpenCode.
+-- on the terminal's own background, so it stands a little apart from the panel.
 --
 -- Palettes and toasts open with M.border. Every other float (hover docs, key
 -- hints, problems, Neovim's messages) opens with 'winborder', which can't color

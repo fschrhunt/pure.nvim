@@ -52,6 +52,6 @@ Restart Neovim, or run `:colorscheme pure`, to see a change.
 ## Terminal and font
 
 The scheme expects a dark terminal background and a terminal with true color, which every modern
-macOS and Linux terminal has. File icons need a [Nerd Font](https://www.nerdfonts.com); Meslo
-(`brew install --cask font-meslo-lg-nerd-font`, then choose `MesloLGS Nerd Font`) is a clean
-choice close to Menlo.
+macOS and Linux terminal has. File icons and the spacebar icon need a
+[Nerd Font](https://www.nerdfonts.com), such as MesloLGS Nerd Font
+(`brew install --cask font-meslo-lg-nerd-font`).
