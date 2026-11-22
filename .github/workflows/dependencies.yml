@@ -1,7 +1,9 @@
 name: Dependencies
 
-# Dependabot can't read nvim-pack-lock.json, so this proposes plugin updates
-# weekly as one pull request that is refreshed until merged.
+# Weekly upkeep. Dependabot can't read nvim-pack-lock.json, so this proposes
+# plugin updates as one pull request that is refreshed until merged. It also
+# checks that every language server recipe still finds its download, so a
+# project renaming its release files fails here instead of on someone's install.
 on:
   schedule:
     - cron: '0 6 * * 1'
@@ -61,3 +63,21 @@ jobs:
           fi
           # Pushes made with the automatic token don't start CI; request it for the PR's commit.
           gh workflow run ci.yml --ref "$branch"
+
+  servers:
+    name: Check language server downloads
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install Neovim
+        run: |
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          echo "$HOMEBREW_PREFIX/bin" >> "$GITHUB_PATH"
+          brew install neovim
+      - name: Check every recipe
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: ./x servers
