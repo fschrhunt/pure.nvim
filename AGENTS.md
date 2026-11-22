@@ -1,8 +1,8 @@
 # Developing pure.nvim
 
 pure.nvim is a Neovim config: clean on screen, intuitive to use, and small enough to read in one
-sitting. Prefer what Neovim ships with; add a plugin only for something Neovim can't do, and
-keep each change to what it needs.
+sitting. Keep each change to what it needs. Plugins are welcome when they make pure nicer to
+use; list each one in `docs/plugins.md`.
 
 ## Commands
 
@@ -20,7 +20,7 @@ keep each change to what it needs.
 
 - `init.lua`: loads the modules below in order.
 - `lua/pure/options.lua`: options, clipboard, and automatic behavior.
-- `lua/pure/plugins.lua`: the two plugins for `vim.pack` and mini.nvim setup.
+- `lua/pure/plugins.lua`: the plugins for `vim.pack` and their setup.
 - `lua/pure/syntax.lua`: tree-sitter highlighting and folding, building parsers on first use.
 - `lua/pure/languages.lua`: starting installed servers, offering missing ones, diagnostics,
   completion, and formatting.

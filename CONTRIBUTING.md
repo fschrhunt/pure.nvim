@@ -1,6 +1,6 @@
 # Contributing
 
-pure.nvim is a small Neovim config. Prefer what Neovim ships with and keep changes simple.
+pure.nvim is a small Neovim config, and contributions are welcome. Keep changes simple.
 Development needs Neovim 0.12 or newer, Git, a POSIX shell, StyLua, ShellCheck, and the
 tree-sitter CLI with a C compiler.
 
