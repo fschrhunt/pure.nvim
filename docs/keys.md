@@ -89,11 +89,11 @@ The picker is the centered window behind `Space f`, `/`, `r`, `d`, `?` and the p
 ## In the file explorer
 
 The explorer (`Space e`) opens on the current file, with its folder on the left and a preview on
-the right.
+the right. The columns grow with the window: the current folder takes about a third of it.
 
 | Key | Does |
 | --- | --- |
-| `l` / `h` | Go into / back out of a folder |
+| `]` / `[` | Forward into a folder / back out of it (`l` / `h` also work) |
 | `Enter` | Open the file full screen |
 | `q` | Close |
 | `=` | Apply edits: rename by editing a name, create by adding a line, delete by removing one |
