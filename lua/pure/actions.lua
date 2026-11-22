@@ -148,7 +148,11 @@ for _, entry in ipairs(actions) do
   end
 end
 
--- Palette entries read "Name        Space x   :word".
+-- The palette is a compact list near the top of the screen. Entries read
+-- "Name   Space x   :word", with the key and command in a quieter color.
+local name_width, key_width = 26, 11
+local hint = vim.api.nvim_create_namespace('pure.palette')
+
 local function key_label(key)
   if not key then
     return ''
@@ -156,18 +160,43 @@ local function key_label(key)
   return (key:gsub('<leader>', 'Space '):gsub('<C%-(.)>', 'Ctrl-%1'))
 end
 
+local function show_palette(buf, items, query)
+  MiniPick.default_show(buf, items, query)
+  vim.api.nvim_buf_clear_namespace(buf, hint, 0, -1)
+  for row, line in ipairs(vim.api.nvim_buf_get_lines(buf, 0, -1, false)) do
+    if #line > name_width then
+      vim.hl.range(buf, hint, 'PurePaletteHint', { row - 1, name_width }, { row - 1, #line })
+    end
+  end
+end
+
+local function palette_window()
+  local width, height = name_width + key_width + 14, math.min(#actions, 16)
+  return {
+    anchor = 'NW',
+    width = math.min(width, vim.o.columns - 4),
+    height = height,
+    row = math.floor(vim.o.lines * 0.15),
+    col = math.floor((vim.o.columns - width) / 2),
+  }
+end
+
 local function open_palette()
-  vim.ui.select(actions, {
+  MiniPick.ui_select(actions, {
     prompt = 'Command palette',
     format_item = function(entry)
       local command = entry.cmd and (':' .. entry.cmd) or ''
-      return ('%-26s%-11s%s'):format(entry[1], key_label(entry[2]), command)
+      return ('%-' .. name_width .. 's%-' .. key_width .. 's%s'):format(
+        entry[1],
+        key_label(entry[2]),
+        command
+      )
     end,
   }, function(entry)
     if entry then
       run(entry[3])
     end
-  end)
+  end, { source = { show = show_palette }, window = { config = palette_window } })
 end
 vim.keymap.set('n', '<leader>p', open_palette, { desc = 'Command palette' })
 

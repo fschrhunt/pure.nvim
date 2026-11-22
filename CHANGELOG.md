@@ -29,3 +29,5 @@
 - Add plain-word commands for everyday actions, such as `:back` (`:b`), `:forward` (`:f`), `:find`,
   `:search`, `:close`, and `:palette`; the palette shows each action's command. Neovim's netrw
   explorer is no longer loaded.
+- Show the command palette as a compact list near the top of the screen, with keys and commands
+  in a quieter color, and cap the other pickers' size on wide screens.

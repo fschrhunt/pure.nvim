@@ -50,8 +50,8 @@ require('mini.pick').setup({
   },
   window = {
     config = function()
-      local height = math.floor(0.6 * vim.o.lines)
-      local width = math.floor(0.6 * vim.o.columns)
+      local height = math.min(24, math.floor(0.6 * vim.o.lines))
+      local width = math.min(110, math.floor(0.7 * vim.o.columns))
       return {
         anchor = 'NW',
         height = height,
