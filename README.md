@@ -48,8 +48,8 @@ in the command palette, along with Neovim's own code keys.
 | `Space r` | Recent files | `Space +` | Split right |
 | `Space ?` | Search help | `Space x` | Close window |
 
-`Ctrl-o` steps back to where you were. In the file explorer, `h` backs out of a folder, `l` goes
-in, and `Enter` opens a file. [All keys](docs/keys.md)
+`Ctrl-o` steps back to where you were. In the file explorer, `[` goes back a folder, `]` goes
+forward, and `Enter` opens a file. [All keys](docs/keys.md)
 
 ## Docs
 
