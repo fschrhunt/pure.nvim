@@ -21,3 +21,6 @@
 - Go back and forward with `Space [` and `Space ]`, and through folders in the file explorer with
   `[` and `]`. Each action has one key: the explorer's `h` and `l` and the `:W` and `:Q` typo
   commands are gone.
+- Turn off duplicate and hidden plugin keys: mini.diff's `gh`, `gH`, `[H`, and `]H`, the explorer's
+  extra keys, and the picker's `Ctrl-n`, `Ctrl-p`, marking, and scrolling keys. `Esc` closes the
+  explorer like the picker. Recent files lists open files first, replacing "Open files".
