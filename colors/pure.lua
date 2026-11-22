@@ -104,7 +104,9 @@ local groups = {
   TabLineFill = {},
   TabLineSel = { fg = c.text, bold = true },
   NormalFloat = { fg = c.text, bg = c.surface },
-  FloatBorder = { fg = c.blue, bg = c.surface }, -- the bar down each panel's left side
+  FloatBorder = { fg = c.blue, bg = c.surface },
+  PurePanelBar = { fg = c.blue }, -- on the terminal's background, apart from the panel
+  PurePanelPadding = { fg = c.surface, bg = c.surface },
   FloatTitle = { fg = c.blue, bg = c.surface, bold = true },
   FloatFooter = { fg = c.muted, bg = c.surface },
   Pmenu = { fg = c.text, bg = c.surface },

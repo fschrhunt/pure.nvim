@@ -1,30 +1,17 @@
 -- Toast: a small panel in the bottom-right corner that asks one yes-or-no
--- question with two buttons. Space y / Space n answer it while it's showing,
--- and clicking a button works too. It never takes the cursor, and it closes on
--- its own after a while, which counts as no.
+-- question with two buttons. Space y / Space n answer it, and clicking a
+-- button works too. It never takes the cursor, and it stays until answered.
+-- A question asked while another is showing waits its turn.
 --
 -- M.ask({ title, message, on_yes, on_no })
 
 local M = {}
+local panels = require('pure.panels')
 local ns = vim.api.nvim_create_namespace('pure.toast')
-local current -- the toast on screen: { win, timer, answer }
+local current -- the window of the toast on screen
+local waiting = {} -- questions asked while one was showing
 
-local function dismiss()
-  if not current then
-    return
-  end
-  local toast = current
-  current = nil
-  toast.timer:stop()
-  toast.timer:close()
-  pcall(vim.keymap.del, 'n', '<leader>y')
-  pcall(vim.keymap.del, 'n', '<leader>n')
-  pcall(vim.api.nvim_win_close, toast.win, true)
-end
-
-function M.ask(opts)
-  dismiss()
-
+local function show(opts)
   -- Lines: title, message, a blank line, then the buttons, with one space of
   -- padding on each side. Buttons name their key with the spacebar icon.
   local yes, no = ' Yes  󱁐 Y ', ' No  󱁐 N '
@@ -56,17 +43,23 @@ function M.ask(opts)
     height = #lines,
     style = 'minimal',
     zindex = 60,
+    border = panels.border,
   })
 
   local function answer(said_yes)
-    dismiss()
+    current = nil
+    pcall(vim.keymap.del, 'n', '<leader>y')
+    pcall(vim.keymap.del, 'n', '<leader>n')
+    pcall(vim.api.nvim_win_close, win, true)
     local callback = said_yes and opts.on_yes or opts.on_no
     if callback then
       callback()
     end
+    if not current and #waiting > 0 then
+      show(table.remove(waiting, 1))
+    end
   end
-  current = { win = win, timer = vim.uv.new_timer() }
-  current.timer:start(12000, 0, vim.schedule_wrap(function() answer(false) end))
+  current = win
 
   vim.keymap.set('n', '<leader>y', function() answer(true) end, { desc = 'Yes: ' .. opts.title })
   vim.keymap.set('n', '<leader>n', function() answer(false) end, { desc = 'No' })
@@ -83,6 +76,14 @@ function M.ask(opts)
       answer(false)
     end
   end, { buffer = buf })
+end
+
+function M.ask(opts)
+  if current then
+    table.insert(waiting, opts)
+  else
+    show(opts)
+  end
 end
 
 return M

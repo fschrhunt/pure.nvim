@@ -27,6 +27,7 @@ keep each change to what it needs.
   command, file types, settings, and `install` command.
 - `lua/pure/actions.lua`: every action, its Space key, and the command palette.
 - `lua/pure/places.lua`: the browser-style back and forward history of files and folders.
+- `lua/pure/panels.lua`: how floating windows look: padding and the blue bar, no outline.
 - `lua/pure/toast.lua`: yes-or-no toasts with buttons.
 - `lua/pure/palette.lua`: the fuzzy palette and its sources (files, recent files, text search,
   problems, help, git changes), and `vim.ui.select`.

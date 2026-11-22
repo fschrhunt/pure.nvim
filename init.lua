@@ -7,6 +7,7 @@
 vim.g.mapleader = ' '
 
 require('pure.options') -- look and behavior
+require('pure.panels') -- how floating windows look
 require('pure.plugins') -- installs plugins; sets up icons, explorer, git and key hints
 require('pure.syntax') -- tree-sitter highlighting and folding
 require('pure.languages') -- language servers, completion and formatting
