@@ -46,9 +46,9 @@ require('mini.pick').setup({
 vim.ui.select = MiniPick.ui_select -- every "pick one" list uses the picker
 
 -- Folders side by side, with a preview of the file under the cursor:
--- [ or h goes back a folder, ] or l goes forward, Enter opens the file full screen.
+-- [ goes back a folder, ] goes forward, Enter opens the file full screen.
 require('mini.files').setup({
-  mappings = { go_in_plus = '<CR>' },
+  mappings = { go_out = '[', go_in = ']', go_out_plus = '', go_in_plus = '<CR>' },
   options = { permanent_delete = false }, -- deleted files go to a trash folder
   windows = { preview = true },
 })
@@ -62,18 +62,6 @@ local function size_explorer()
 end
 size_explorer()
 vim.api.nvim_create_autocmd('VimResized', { group = group, callback = size_explorer })
-
-vim.api.nvim_create_autocmd('User', {
-  group = group,
-  pattern = 'MiniFilesBufferCreate',
-  desc = 'Back and forward through folders with [ and ]',
-  callback = function(args)
-    -- nowait: Neovim has other keys starting with [ and ], which would otherwise delay these.
-    local buf = args.data.buf_id
-    vim.keymap.set('n', '[', MiniFiles.go_out, { buffer = buf, nowait = true, desc = 'Back' })
-    vim.keymap.set('n', ']', MiniFiles.go_in, { buffer = buf, nowait = true, desc = 'Forward' })
-  end,
-})
 
 -- Draw the explorer as full-height columns split by a single line, like
 -- windows rather than boxes; the rightmost column (usually the preview)

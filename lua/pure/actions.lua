@@ -14,6 +14,15 @@ local function browse_folder()
   MiniFiles.open(vim.uv.fs_stat(file) and file or nil) -- opens on the current file
 end
 
+-- Back and forward through the places you've been (Neovim's jump list),
+-- across files, like a browser's back and forward buttons. The keys are sent
+-- as typed, with Neovim's own meaning: Ctrl-i is the same character as Tab,
+-- which :normal can't take as an argument.
+local function press(keys)
+  return function() vim.api.nvim_feedkeys(vim.keycode(keys), 'n', false) end
+end
+local go_back, go_forward = press('<C-o>'), press('<C-i>')
+
 local function open_terminal()
   vim.cmd('botright split | terminal')
   vim.cmd.startinsert()
@@ -32,6 +41,9 @@ end
 -- { name, key or false, Ex command or function }. Space keys are mapped
 -- here. Other keys are Neovim's (or a plugin's) own and are only listed.
 local actions = {
+  -- Getting around
+  { 'Go back', '<leader>[', go_back },
+  { 'Go forward', '<leader>]', go_forward },
   -- Files
   { 'Find a file', '<leader>f', MiniPick.builtin.files },
   { 'Recent files', '<leader>r', MiniExtra.pickers.oldfiles },
@@ -118,8 +130,3 @@ vim.keymap.set('n', '<Esc>', '<Cmd>nohlsearch<CR><Esc>', { desc = 'Clear search 
 -- Move through wrapped lines the way they look on screen.
 vim.keymap.set({ 'n', 'x' }, 'j', [[v:count == 0 ? 'gj' : 'j']], { expr = true })
 vim.keymap.set({ 'n', 'x' }, 'k', [[v:count == 0 ? 'gk' : 'k']], { expr = true })
-
--- Forgive a held Shift in :W, :Q and friends.
-for typo, command in pairs({ W = 'write', Q = 'quit', Wq = 'wq', WQ = 'wq', Qa = 'qall' }) do
-  vim.api.nvim_create_user_command(typo, command .. '<bang>', { bang = true })
-end
