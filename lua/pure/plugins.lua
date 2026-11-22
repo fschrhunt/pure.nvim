@@ -3,10 +3,12 @@
 -- file explorer and git changes. Language and syntax plugins are configured
 -- in pure.code and pure.syntax.
 
+local group = vim.api.nvim_create_augroup('pure.plugins', {})
+
 -- nvim-treesitter's parsers must match its version, so rebuild them whenever
 -- the plugin updates. Registered before vim.pack.add so it also runs on install.
 vim.api.nvim_create_autocmd('PackChanged', {
-  group = vim.api.nvim_create_augroup('pure.plugins', {}),
+  group = group,
   callback = function(ev)
     if ev.data.spec.name == 'nvim-treesitter' and ev.data.kind == 'update' then
       if not ev.data.active then
@@ -45,11 +47,36 @@ require('mini.pick').setup({
 })
 vim.ui.select = MiniPick.ui_select -- every "pick one" list uses the picker
 
--- Folders side by side: h backs out, l goes in, Enter opens and closes.
+-- Folders side by side, with a preview of the file under the cursor:
+-- h backs out, l goes in, Enter opens the file full screen.
 require('mini.files').setup({
   mappings = { go_in_plus = '<CR>' },
   options = { permanent_delete = false }, -- deleted files go to a trash folder
-  windows = { preview = true, width_preview = 50 },
+  windows = { preview = true, width_focus = 40, width_nofocus = 25 },
+})
+
+-- Draw the explorer as full-height columns split by a single line, like
+-- windows rather than boxes; the rightmost column (usually the preview)
+-- stretches to the edge of the screen.
+vim.api.nvim_create_autocmd('User', {
+  group = group,
+  pattern = 'MiniFilesWindowUpdate',
+  callback = function(args)
+    local win = args.data.win_id
+    local windows = MiniFiles.get_explorer_state().windows
+    local last = windows[#windows].win_id == win
+
+    local config = vim.api.nvim_win_get_config(win)
+    -- A title row, a blank left margin, and a divider on the right (none on the last).
+    local divider = last and ' ' or '│'
+    config.border = { ' ', ' ', divider, divider, divider, '', '', ' ' }
+    config.row = 0
+    config.height = vim.o.lines - 1
+    if last then
+      config.width = math.max(vim.o.columns - config.col - 2, config.width)
+    end
+    vim.api.nvim_win_set_config(win, config)
+  end,
 })
 
 -- Changed lines get colored line numbers; ]h and [h jump between changes.
