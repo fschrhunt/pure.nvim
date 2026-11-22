@@ -1,0 +1,71 @@
+# pure.nvim
+
+A clean, intuitive Neovim. Built on what Neovim 0.12 ships with, plus four plugins for what it
+doesn't: icons and a picker, tree-sitter parsers, language server settings, and formatting.
+
+Nothing on screen but your code. There's no status bar until you split, no file tree, and no
+background color: the `pure` color scheme draws text on whatever background your terminal has.
+Press `Space p` for the command palette, which lists every action with its key.
+
+## Install
+
+pure.nvim needs Neovim 0.12 or newer, Git, [ripgrep](https://github.com/BurntSushi/ripgrep), the
+[tree-sitter CLI](https://github.com/tree-sitter/tree-sitter) with a C compiler, and a
+[Nerd Font](https://www.nerdfonts.com) for file icons. On macOS:
+
+```sh
+brew install neovim ripgrep tree-sitter
+brew install --cask font-meslo-lg-nerd-font
+git clone https://github.com/fschrhunt/pure.nvim ~/dev/pure.nvim
+~/dev/pure.nvim/x install
+```
+
+`./x install` links `~/.config/nvim` to the checkout and refuses to replace an existing config.
+The first launch installs the plugins at the versions in `nvim-pack-lock.json` and builds the
+tree-sitter parsers in the background.
+
+Language servers are separate programs. pure.nvim starts the ones it finds:
+
+```sh
+brew install gopls typescript-language-server basedpyright ruff lua-language-server bash-language-server
+npm install -g @astrojs/language-server
+```
+
+## Keys
+
+Space is the leader. The palette shows these and the rest, including Neovim's own code keys.
+
+| Key | Action | Key | Action |
+| --- | --- | --- | --- |
+| `Space p` | Command palette | `Space -` | Split below |
+| `Space f` | Find a file | `Space +` | Split right |
+| `Space r` | Recent files | `Space x` | Close window |
+| `Space /` | Search text in project | `Space t` | Open terminal |
+| `Space b` | Open files | `Space d` | Show problems |
+| `Space e` | Browse folder | `Space g` | Show git changes |
+| `Space w` | Save | `Space u` | Undo history |
+| `Space q` | Close file | `Space h` | Search help |
+
+`Ctrl-o` steps back to where you were. In the file explorer, `h` backs out of a folder, `l` goes
+in, and `Enter` opens a file.
+
+## Code
+
+Each language server brings errors as you type, go to definition (`Ctrl-]`), docs (`K`), rename
+(`grn`), and code actions (`gra`). Suggestions appear while you type: `Tab` moves through them and
+`Enter` accepts. Files are formatted on save, with Prettier in projects that configure it and the
+language server's formatter everywhere else.
+
+Configured languages: Go, TypeScript and JavaScript, Astro, Python, Lua, and shell.
+
+## Make it yours
+
+- Add an action with one line in `lua/pure/actions.lua`. It shows up in the palette and gets its
+  key there.
+- Change a color once in the palette table at the top of `colors/pure.lua`.
+- Add a language by listing its parser in `lua/pure/syntax.lua` and its server in
+  `lua/pure/code.lua`.
+
+## License
+
+[MIT](LICENSE)
