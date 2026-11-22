@@ -109,6 +109,8 @@ local groups = {
   PurePanelPadding = { fg = c.surface, bg = c.surface },
   PurePanelDivider = { fg = c.faint }, -- section rows in hover docs
   FloatTitle = { fg = c.blue, bg = c.surface, bold = true },
+  PurePanelClose = { fg = c.muted, bg = c.surface }, -- a toast's x
+  PurePanelCloseHover = { fg = c.blue, bg = c.surface, bold = true }, -- while the mouse is over it
   FloatFooter = { fg = c.muted, bg = c.surface },
   Pmenu = { fg = c.text, bg = c.surface },
   PmenuBorder = { fg = c.surface, bg = c.surface },

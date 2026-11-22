@@ -86,8 +86,13 @@ fields) and `Enter` accepts one, which also adds any import it needs.
 When something asks a question, like installing a missing language server, a toast appears in
 the bottom-right corner with Yes and No buttons. Press `Space y` or `Space n`, or click a button.
 It doesn't take the cursor, so you can keep typing, and it stays until you answer. After Yes, the
-same toast shows the progress and then the result, and closes on its own. The next question
-waits until it's gone, and the toast moves up out of the way of Neovim's own messages.
+same toast shows the progress and then the result, and closes on its own, but not while the
+mouse is over it. The next question waits until it's gone, and the toast moves up out of the way
+of Neovim's own messages.
+
+Every toast, Neovim's messages included, has an `x` in its top-right corner that lights up while
+the mouse is over the toast. Click it to close the toast; on a question, that's the same as No.
+A toast without buttons also closes when you click anywhere on it.
 
 ## In a terminal
 

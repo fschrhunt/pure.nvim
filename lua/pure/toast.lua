@@ -2,8 +2,10 @@
 -- question to result. It asks a yes-or-no question with two buttons (Space y /
 -- Space n or a click answer it); it never takes the cursor and stays until
 -- answered. Answering Yes turns it into progress for the task, then the
--- result, and it closes a moment later. Toasts take turns: the next one shows
--- only after the current one has closed.
+-- result, and it closes a moment later, or once the mouse leaves it. Its x
+-- closes it any time (for a question, that's No), and a click anywhere on a
+-- toast without buttons does too. Toasts take turns: the next one shows only
+-- after the current one has closed.
 --
 -- M.ask({ title, message, on_yes = function(update) end, on_no })
 -- M.progress(text) shows progress without a question.
@@ -13,7 +15,9 @@
 local M = {}
 local panels = require('pure.panels')
 local ns = vim.api.nvim_create_namespace('pure.toast')
-local current -- { win, buf, timer } of the toast on screen
+-- The toast on screen: { win, buf, timer, dismiss, click }. dismiss runs for
+-- its x; click, while it has buttons, gets the other clicks.
+local current
 local queue = {} -- functions that show the toasts waiting their turn
 
 -- The screen row the toast's bottom edge sits on: the last row, or just above
@@ -34,6 +38,7 @@ local function close()
   if not current then
     return
   end
+  panels.closable(current.win, nil)
   pcall(vim.keymap.del, 'n', '<leader>y')
   pcall(vim.keymap.del, 'n', '<leader>n')
   pcall(vim.api.nvim_win_close, current.win, true)
@@ -92,8 +97,13 @@ local function draw(lines, marks)
   else
     local buf = vim.api.nvim_create_buf(false, true)
     config.style = 'minimal'
-    current =
-      { buf = buf, win = vim.api.nvim_open_win(buf, false, config), timer = vim.uv.new_timer() }
+    config.focusable, config.mouse = false, true -- clicks reach it without moving the cursor
+    current = {
+      buf = buf,
+      win = vim.api.nvim_open_win(buf, false, config),
+      timer = vim.uv.new_timer(),
+      dismiss = close,
+    }
     -- Neovim's messages come and go without an event, so look a few times a
     -- second, while a toast is up, and move out of their way.
     local toast = current
@@ -113,6 +123,7 @@ local function draw(lines, marks)
       end)
     )
   end
+  panels.closable(current.win, current.dismiss, current.click)
   vim.api.nvim_buf_set_lines(current.buf, 0, -1, false, lines)
   vim.api.nvim_buf_clear_namespace(current.buf, ns, 0, -1)
   for _, mark in ipairs(marks) do
@@ -127,15 +138,22 @@ local function updater()
     if current ~= toast then
       return
     end
+    toast.dismiss, toast.click = close, nil -- no buttons now: a click anywhere closes it
     local lines, marks = {}, {}
     add(lines, marks, text, state == 'failed' and 'PureToastError' or 'PureToastMessage')
     draw(lines, marks)
     if state then
-      vim.defer_fn(function()
-        if current == toast then
-          close()
-        end
-      end, state == 'failed' and 6000 or 2500)
+      -- Closes after a moment, but not while the mouse is over it.
+      local function later(ms)
+        vim.defer_fn(function()
+          if current == toast and panels.hovered(toast.win) then
+            later(1000)
+          elseif current == toast then
+            close()
+          end
+        end, ms)
+      end
+      later(state == 'failed' and 6000 or 2500)
     end
   end
 end
@@ -173,20 +191,20 @@ local function show_question(opts)
   vim.keymap.set('n', '<leader>y', function() answer(true) end, { desc = 'Yes: ' .. opts.title })
   vim.keymap.set('n', '<leader>n', function() answer(false) end, { desc = 'No' })
 
-  -- A click lands in the toast's window; answer by which button was under it,
-  -- then hand the cursor back. Clicks arrive in screen columns, and the
-  -- spacebar icon is several bytes but one column, so buttons keep both.
+  -- Answer by which button the click was on; the x says No. Clicks arrive in
+  -- screen columns, counting the bar, and the spacebar icon is several bytes
+  -- but one column, so buttons keep both.
   local yes_col, no_col = 1, 1 + vim.fn.strdisplaywidth(yes) + 2
-  vim.keymap.set('n', '<LeftRelease>', function()
-    local mouse = vim.fn.getmousepos()
-    vim.cmd.wincmd('p')
-    local on_buttons, col = mouse.winid == toast.win and mouse.line == buttons, mouse.wincol
+  toast.dismiss = function() answer(false) end
+  toast.click = function(mouse)
+    local on_buttons, col = mouse.line == buttons, mouse.wincol
     if on_buttons and col > yes_col and col <= yes_col + vim.fn.strdisplaywidth(yes) then
       answer(true)
     elseif on_buttons and col > no_col and col <= no_col + vim.fn.strdisplaywidth(no) then
       answer(false)
     end
-  end, { buffer = toast.buf })
+  end
+  panels.closable(toast.win, toast.dismiss, toast.click)
 end
 
 function M.ask(opts)
