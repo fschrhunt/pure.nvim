@@ -54,7 +54,7 @@ local actions = {
   { 'Rename symbol', 'grn', vim.lsp.buf.rename },
   { 'Code actions', 'gra', vim.lsp.buf.code_action },
   { 'File outline', 'gO', vim.lsp.buf.document_symbol },
-  { 'Format file', false, require('conform').format },
+  { 'Format file', false, 'Format' },
   { 'Show problems', '<leader>d', MiniExtra.pickers.diagnostic },
   { 'Next problem', ']d', function() vim.diagnostic.jump({ count = 1 }) end },
   { 'Comment line', 'gcc', 'normal gcc' },
