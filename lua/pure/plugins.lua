@@ -1,7 +1,6 @@
--- Plugins: installs every plugin with Neovim's built-in vim.pack (versions
--- pinned in nvim-pack-lock.json) and sets up mini.nvim's icons, picker,
--- file explorer and git changes. Language and syntax plugins are configured
--- in pure.code and pure.syntax.
+-- Plugins: installs the two plugins with Neovim's built-in vim.pack (versions
+-- pinned in nvim-pack-lock.json) and sets up mini.nvim's icons, picker, file
+-- explorer and git changes. nvim-treesitter is configured in pure.syntax.
 
 local group = vim.api.nvim_create_augroup('pure.plugins', {})
 
@@ -21,9 +20,7 @@ vim.api.nvim_create_autocmd('PackChanged', {
 
 vim.pack.add({
   'https://github.com/nvim-mini/mini.nvim', -- icons, picker, file explorer, git changes
-  { src = 'https://github.com/nvim-treesitter/nvim-treesitter', version = 'main' },
-  'https://github.com/neovim/nvim-lspconfig', -- ready-made language server settings
-  'https://github.com/stevearc/conform.nvim', -- formatting on save
+  { src = 'https://github.com/nvim-treesitter/nvim-treesitter', version = 'main' }, -- parsers
 }, { confirm = false })
 
 require('mini.icons').setup()
