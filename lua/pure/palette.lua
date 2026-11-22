@@ -13,6 +13,7 @@
 -- of being filtered; `hint_col` draws the rest of each line in a quieter color.
 
 local M = {}
+local panels = require('pure.panels')
 local ns = vim.api.nvim_create_namespace('pure.palette')
 
 -- Open a file item in the window the palette was opened from.
@@ -43,7 +44,7 @@ function M.open(opts)
     width = width,
     height = 1,
     style = 'minimal',
-    border = { '┃', ' ', ' ', ' ', ' ', ' ', '┃', '┃' },
+    border = panels.border,
     title = { { ' ' .. opts.title .. ' ', 'FloatTitle' } },
   })
   local list_win = vim.api.nvim_open_win(list_buf, false, {
@@ -54,7 +55,7 @@ function M.open(opts)
     height = height,
     style = 'minimal',
     focusable = false,
-    border = { '', '', '', ' ', ' ', ' ', '┃', '┃' },
+    border = panels.border_below,
   })
   vim.bo[prompt_buf].autocomplete = false -- the completion menu would cover the list
   vim.api.nvim_buf_set_extmark(prompt_buf, ns, 0, 0, {
