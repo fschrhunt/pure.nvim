@@ -8,12 +8,12 @@ action's command next to its key.
 
 | Command | Does | Key |
 | --- | --- | --- |
-| `:back` or `:b` | Go back to where you were, across files | `Space [` |
+| `:back` or `:b` | Go back to the previous place: a file, or a folder in the explorer | `Space [` |
 | `:forward` or `:f` | Go forward again | `Space ]` |
 | `:find` | Find a file | `Space f` |
 | `:recent` | Recent files | `Space r` |
 | `:search` | Search text in the project | `Space /` |
-| `:explore` | Browse the current file's folder | `Space e` |
+| `:explore` | Browse the current file's folder | |
 | `:close` | Close what you're looking at: the split, or the file | `Space q` |
 | `:problems` | Show problems | `Space d` |
 | `:palette` | Command palette | `Space p` |

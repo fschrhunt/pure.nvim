@@ -40,14 +40,14 @@ in the command palette, along with Neovim's own code keys.
 | `Space p` | Command palette | `Space d` | Show problems |
 | `Space f` | Find a file | `Space w` | Save |
 | `Space /` | Search text in project | `Space q` | Close |
-| `Space e` | Browse folder | `Space -` | Split below |
-| `Space r` | Recent files | `Space +` | Split right |
-| `Space ?` | Search help | `Space [` | Go back |
-|  |  | `Space ]` | Go forward |
+| `Space r` | Recent files | `Space -` | Split below |
+| `Space ?` | Search help | `Space +` | Split right |
+| `Space [` | Go back | `Space ]` | Go forward |
 
-`Space [` and `Space ]` go back and forward through where you've been, across files. In the file
-explorer, `[` and `]` go back and forward through folders. Everyday actions are also commands,
-like `:back` (`:b`), `:forward` (`:f`), `:find`, and `:close`. [All keys](docs/keys.md) ·
+`Space [` and `Space ]` are back and forward, like a browser's: through the files and folders
+you've visited. Open a file from the explorer (`:explore`), and `Space [` returns to that folder.
+In the explorer, `[` and `]` go back and forward through folders. Everyday actions are also
+commands, like `:back` (`:b`), `:forward` (`:f`), `:find`, and `:close`. [All keys](docs/keys.md) ·
 [All commands](docs/commands.md)
 
 ## Docs

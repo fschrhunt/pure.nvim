@@ -13,7 +13,6 @@ key. Everyday actions are also [commands](commands.md), like `:back` and `:find`
 | `Space p` | Command palette: every action, with its key |
 | `Space f` | Find a file |
 | `Space /` | Search text in the project |
-| `Space e` | Browse the current file's folder |
 | `Space r` | Recent files: open files first, then the ones you had open before |
 | `Space d` | Show problems |
 | `Space w` | Save |
@@ -21,7 +20,7 @@ key. Everyday actions are also [commands](commands.md), like `:back` and `:find`
 | `Space -` | Split below |
 | `Space +` | Split right |
 | `Space ?` | Search Neovim's help |
-| `Space [` | Go back to where you were, across files |
+| `Space [` | Go back to the previous place: a file, or a folder in the explorer |
 | `Space ]` | Go forward again |
 
 Palette only: new file, save all, copy file path, open a terminal, format the file,
@@ -30,8 +29,13 @@ config, update plugins, and restart or quit Neovim.
 
 ## Getting around
 
-`Space [` and `Space ]` are the back and forward buttons: they step through the places you've
-jumped to, like opening a file, searching, or going to a definition.
+`Space [` and `Space ]` work like a browser's back and forward buttons. They step through the
+places you've been: files, and folders in the file explorer. Open a file from the explorer, and
+`Space [` takes you back to that folder with the file selected. Going somewhere new after going
+back drops the forward history.
+
+Moves inside a file, like searching or going to a definition, aren't places. Neovim's own
+`Ctrl-o` and `Ctrl-i` step back and forward through those.
 
 | Key | Does |
 | --- | --- |
@@ -92,8 +96,9 @@ The picker is the panel behind `Space f`, `/`, `r`, `d`, `?`, the palette, and N
 
 ## In the file explorer
 
-The explorer (`Space e`) opens on the current file, with its folder on the left and a preview on
-the right. The columns grow with the window: the current folder takes about a third of it.
+The explorer (`:explore`, or "Browse folder" in the palette) opens on the current file, with its
+folder on the left and a preview on the right. `Space [` from a file you opened here comes back to
+it. The columns grow with the window: the current folder takes about a third of it.
 
 | Key | Does |
 | --- | --- |
