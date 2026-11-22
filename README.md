@@ -1,17 +1,24 @@
 # pure.nvim
 
-A clean, intuitive Neovim. Built on what Neovim 0.12 ships with, plus two plugins for what it
-can't do alone: [mini.nvim](https://github.com/nvim-mini/mini.nvim) for icons, the file explorer,
-git changes, and key hints, and [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
-for syntax. Palettes, language servers, and formatting are its own, in plain files.
+> A clean, quiet Neovim that's easy to make your own.
 
-Nothing on screen but your code. There's no status bar until you split, no file tree, and no
-background color: the `pure` color scheme draws text on whatever background your terminal has.
-Press `Space p` for the command palette, which lists every action with its key.
+Neovim 0.12 already does most of what you need. pure.nvim sets it up nicely, adds
+[mini.nvim](https://github.com/nvim-mini/mini.nvim) and
+[nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter), and otherwise stays out of
+your way. It's small enough to read in one sitting, so changing it is easy.
+
+## Overview
+
+- Nothing on screen but your code. No status bar until you split, no file tree, and no background
+  color: the `pure` color scheme uses whatever background your terminal has.
+- Press `Space p` for the command palette. Every action is in there, along with its key.
+- Language servers install themselves. Open a file and pure offers to set up its server. It covers
+  25 languages, plus spelling and grammar for prose.
+- Back and forward work like a browser's, through the files and folders you've visited.
 
 ## Install
 
-pure.nvim needs Neovim 0.12 or newer, Git, [ripgrep](https://github.com/BurntSushi/ripgrep), the
+You'll need Neovim 0.12 or newer, Git, [ripgrep](https://github.com/BurntSushi/ripgrep), the
 [tree-sitter CLI](https://github.com/tree-sitter/tree-sitter) with a C compiler, and a
 [Nerd Font](https://www.nerdfonts.com) for file icons. Installing language servers uses `curl`,
 `tar`, and `unzip`, which most systems already have. On macOS:
@@ -27,18 +34,18 @@ On Linux, install the same with your package manager (Neovim 0.12 may need to co
 [its releases](https://github.com/neovim/neovim/releases) if yours is older), set your terminal
 to a Nerd Font, and run the same two Git and `./x` lines.
 
-`./x install` links `~/.config/nvim` to the checkout and refuses to replace an existing config.
-The first launch installs the plugins at the versions in `nvim-pack-lock.json` and builds the
+`./x install` links `~/.config/nvim` to the checkout. It won't replace a config you already have.
+On first launch, pure installs its plugins at the versions in `nvim-pack-lock.json` and builds the
 tree-sitter parsers in the background.
 
-pure installs language servers itself, with no package manager: open a file whose server is
-missing, and a toast asks whether to install it (`Space y` / `Space n`), including spelling and
-grammar checking for prose. See [languages](docs/languages.md) for the 25 supported languages.
+When you open a file whose language server is missing, a toast asks whether to install it
+(`Space y` / `Space n`). No package manager needed. See [languages](docs/languages.md) for the
+full list.
 
 ## Keys
 
-Everyday actions have a Space key. Press Space and pause to see them listed; everything else is
-in the command palette, along with Neovim's own code keys.
+Press Space and pause to see what's there. Everything else is in the command palette, including
+Neovim's own code keys.
 
 | Key | Action | Key | Action |
 | --- | --- | --- | --- |
@@ -49,23 +56,29 @@ in the command palette, along with Neovim's own code keys.
 | `Space ?` | Search help | `Space +` | Split right |
 | `Space [` | Go back | `Space ]` | Go forward |
 
-`Space [` and `Space ]` are back and forward, like a browser's: through the files and folders
-you've visited. Open a file from the explorer (`:explore`), and `Space [` returns to that folder.
-In the explorer, `[` and `]` go back and forward through folders. Everyday actions are also
-commands, like `:back` (`:b`), `:forward` (`:f`), `:find`, and `:close`. [All keys](docs/keys.md) ·
+Open a file from the explorer (`:explore`) and `Space [` takes you back to that folder. Inside the
+explorer, `[` and `]` move through folders. The everyday actions are commands too, like `:back`
+(`:b`), `:forward` (`:f`), `:find`, and `:close`. [All keys](docs/keys.md) ·
 [All commands](docs/commands.md)
+
+## Make it yours
+
+pure is a starting point, so change whatever you like:
+
+- **Plugins:** add a URL to `vim.pack.add` in `lua/pure/plugins.lua` and set it up below. See
+  [plugins](docs/plugins.md).
+- **Actions:** add one line to the list in `lua/pure/actions.lua`. It shows up in the palette, and
+  gets a Space key and a command if you give it them.
+- **Colors:** edit the color table in `colors/pure.lua`. See [colors](docs/colors.md).
 
 ## Docs
 
 - [Keys](docs/keys.md): every key worth knowing, in the editor, palettes, and the file explorer.
 - [Commands](docs/commands.md): plain-word commands like `:back`, `:find`, and `:close`.
-- [Languages](docs/languages.md): the supported languages, installing their servers, formatting,
-  and adding a language.
+- [Languages](docs/languages.md): supported languages, installing servers, formatting, and adding
+  a language.
 - [Colors](docs/colors.md): the color table, what it colors, and how to change it.
-- [Plugins](docs/plugins.md): the two plugins, their versions, and updating them.
-
-To add an action of your own, add one line to the list in `lua/pure/actions.lua`. It appears in
-the palette, and gets its key and command there if you give it them.
+- [Plugins](docs/plugins.md): the plugins pure uses, adding your own, and keeping them updated.
 
 ## License
 

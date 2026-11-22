@@ -1,4 +1,4 @@
--- Plugins: installs the two plugins with Neovim's built-in vim.pack (versions
+-- Plugins: installs plugins with Neovim's built-in vim.pack (versions
 -- pinned in nvim-pack-lock.json) and sets up mini.nvim's icons, file explorer,
 -- git changes and Space-key hints. Palettes are our own (pure.palette), and
 -- nvim-treesitter is configured in pure.syntax. See docs/plugins.md.
