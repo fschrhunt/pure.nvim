@@ -51,8 +51,9 @@ keep each change to what it needs.
   must not shadow a Neovim command unless `docs/commands.md` lists it as replaced.
 - Colors come only from the color table in `colors/pure.lua`. The scheme never sets `Normal`'s
   background.
-- Don't change Neovim's built-in keys; they're listed in the command palette instead. The one
-  exception is `j` and `k`, which move through wrapped lines the way they look.
+- Don't change Neovim's built-in keys; they're listed in the command palette instead. The
+  exceptions are `j` and `k`, which move through wrapped lines the way they look, and `Ctrl-h`
+  `Ctrl-j` `Ctrl-k` `Ctrl-l`, which move between splits in one key.
 - One key per action. Turn off plugin keys that duplicate another key or aren't documented in
   `docs/keys.md`.
 - Name autocommand groups `pure.<module>`.

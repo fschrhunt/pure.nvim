@@ -45,7 +45,7 @@ Moves inside a file, like searching or going to a definition, aren't places. Neo
 | `/text`, then `n` / `N` | Search, then next / previous match |
 | `*` | Search for the word under the cursor |
 | `Esc` | Clear the search highlight |
-| `Ctrl-w` then `h` `j` `k` `l` | Move between split windows |
+| `Ctrl-h` `Ctrl-j` `Ctrl-k` `Ctrl-l` | Move to the split left / below / above / right |
 
 ## Editing
 
@@ -92,7 +92,8 @@ waits until it's gone, and the toast moves up out of the way of Neovim's own mes
 ## In a terminal
 
 "Open terminal" in the palette opens a shell in a split below. `Esc` twice returns to Neovim
-(a single `Esc` still reaches the program running there), and `Space q` closes it.
+(a single `Esc` still reaches the program running there); then `Ctrl-k` moves back up to your
+file, and `Space q` closes the terminal.
 
 Panels show the Space key as the spacebar icon `󱁐` (it needs a Nerd Font).
 
