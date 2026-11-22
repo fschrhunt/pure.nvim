@@ -1,5 +1,5 @@
--- Lua: lua-language-server (brew install lua-language-server). Knows
--- Neovim's API, so editing this config gets completion and docs.
+-- Lua: lua-language-server. Knows Neovim's API, so editing this config gets
+-- completion and docs.
 return {
   cmd = { 'lua-language-server' },
   filetypes = { 'lua' },
@@ -10,4 +10,5 @@ return {
       workspace = { library = { vim.env.VIMRUNTIME } },
     },
   },
+  install = 'brew install lua-language-server',
 }

@@ -26,13 +26,9 @@ git clone https://github.com/fschrhunt/pure.nvim ~/dev/pure.nvim
 The first launch installs the plugins at the versions in `nvim-pack-lock.json` and builds the
 tree-sitter parsers in the background.
 
-Language servers are separate programs. pure.nvim starts the ones it finds; see
-[languages](docs/languages.md) for what each one does:
-
-```sh
-brew install gopls typescript-language-server basedpyright ruff lua-language-server bash-language-server
-npm install -g @astrojs/language-server
-```
+Language servers aren't installed for you. Open a file, and if its language's server is missing,
+a toast in the corner suggests it; `:install` installs it. See [languages](docs/languages.md) for
+the 25 supported languages.
 
 ## Keys
 
@@ -58,7 +54,8 @@ like `:back` (`:b`), `:forward` (`:f`), `:find`, and `:close`. [All keys](docs/k
 
 - [Keys](docs/keys.md): every key worth knowing, in the editor, the picker, and the file explorer.
 - [Commands](docs/commands.md): plain-word commands like `:back`, `:find`, and `:close`.
-- [Languages](docs/languages.md): what each language gets, formatting, and adding a language.
+- [Languages](docs/languages.md): the supported languages, installing their servers, formatting,
+  and adding a language.
 - [Colors](docs/colors.md): the palette, what it colors, and how to change it.
 - [Plugins](docs/plugins.md): the two plugins, their versions, and updating them.
 

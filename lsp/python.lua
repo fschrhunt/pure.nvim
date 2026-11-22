@@ -1,4 +1,5 @@
--- Python types and navigation: basedpyright (brew install basedpyright).
+-- Python: basedpyright for errors, types and navigation. Formatting uses ruff
+-- when it's installed (see lua/pure/code.lua).
 return {
   cmd = { 'basedpyright-langserver', '--stdio' },
   filetypes = { 'python' },
@@ -9,4 +10,5 @@ return {
       disableTaggedHints = true,
     },
   },
+  install = 'brew install basedpyright',
 }

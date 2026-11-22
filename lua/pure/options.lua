@@ -8,9 +8,10 @@ local group = vim.api.nvim_create_augroup('pure.options', {})
 vim.o.termguicolors = true
 vim.cmd.colorscheme('pure')
 
--- Experimental message UI: no "Press ENTER" prompts, and the command line
--- only takes space while you type. Delete these two lines to go back.
-require('vim._core.ui2').enable({})
+-- Experimental message UI: no "Press ENTER" prompts, the command line only
+-- takes space while you type, and messages appear as toasts in the corner
+-- that fade after a few seconds. Delete these two lines to go back.
+require('vim._core.ui2').enable({ msg = { targets = 'msg' } })
 vim.o.cmdheight = 0
 
 vim.o.number = true
