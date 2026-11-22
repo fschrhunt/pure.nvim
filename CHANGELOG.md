@@ -44,3 +44,6 @@
   folders, like a browser, so going back from a file opened in the explorer returns to its folder.
   `Space e` is gone; the explorer is `:explore` or "Browse folder" in the palette. Neovim's jump
   list stays on `Ctrl-o` and `Ctrl-i`.
+- Ask before installing a missing language server, in a toast with Yes and No buttons that answer
+  to `Space y` / `Space n` or a click, never take the cursor, and close on their own. Floating
+  panels get rounded outlines again, and the picker's prompt and list join into one card.

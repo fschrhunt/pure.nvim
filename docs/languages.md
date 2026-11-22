@@ -1,9 +1,10 @@
 # Languages
 
 Every language gets syntax colors, and the 25 below also get a language server for errors,
-completion, and go to definition. Nothing is installed for you: open a file, and if its language
-server is missing, a toast in the corner says so. Run `:install` to install it, or ignore it and
-keep editing.
+completion, and go to definition. Nothing is installed without asking: open a file whose language
+server is missing, and a toast in the top-right corner asks whether to install it. Press `Space y`
+or click Yes to install it, `Space n` or No to skip. The toast never takes the cursor and closes on
+its own if you ignore it; `:install` works any time later.
 
 ## Syntax
 
@@ -44,8 +45,8 @@ Each language has a file in `lsp/`, named after it, with the server's command an
 | YAML | `yaml.lua` | yaml-language-server | Homebrew |
 | Zig | `zig.lua` | zls | Homebrew |
 
-A server that isn't installed simply doesn't start. Each language suggests its server once per
-session, so the toast won't follow you around.
+A server that isn't installed simply doesn't start. Each language asks once per session, so the
+toast won't follow you around.
 
 ## What a language server gives you
 

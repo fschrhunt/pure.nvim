@@ -81,6 +81,12 @@ These work once a language server is running for the file; see [languages](langu
 Suggestions appear while typing. `Tab` and `Shift-Tab` move through them (or through snippet
 fields) and `Enter` accepts one, which also adds any import it needs.
 
+## Toasts
+
+When something asks a question, like installing a missing language server, a toast appears in
+the top-right corner with Yes and No buttons. Press `Space y` or `Space n`, or click a button. It
+doesn't take the cursor, so you can keep typing, and it closes on its own if you ignore it.
+
 ## In the picker
 
 The picker is the panel behind `Space f`, `/`, `r`, `d`, `?`, the palette, and Neovim's own

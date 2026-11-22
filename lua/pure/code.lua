@@ -31,32 +31,11 @@ for name in pairs(languages) do
   end
 end
 
-local suggested = {}
-vim.api.nvim_create_autocmd('FileType', {
-  group = group,
-  desc = 'Suggest installing a missing language server, once per language',
-  callback = function(args)
-    local name, config = missing_language(args.match)
-    if name and not suggested[name] then
-      suggested[name] = true
-      local label = name:sub(1, 1):upper() .. name:sub(2)
-      vim.notify(
-        ('%s needs %s for errors and completion. Run :install to add it.'):format(
-          label,
-          config.cmd[1]
-        )
-      )
-    end
-  end,
-})
-
-vim.api.nvim_create_user_command('Install', function()
-  local name, config = missing_language(vim.bo.filetype)
-  if not name then
-    return vim.notify('Nothing to install for this file.')
-  end
+-- Installs a language's server in the background, then starts it.
+local function install(name)
+  local config = languages[name]
   local server = config.cmd[1]
-  vim.notify(('Installing %s: %s'):format(server, config.install))
+  vim.notify(('Installing %s…'):format(server))
   vim.system(
     { 'sh', '-c', config.install },
     { text = true },
@@ -73,6 +52,33 @@ vim.api.nvim_create_user_command('Install', function()
       vim.notify(server .. ' is installed.')
     end)
   )
+end
+
+-- Opening a file whose server is missing asks once per language, in a toast.
+local asked = {}
+vim.api.nvim_create_autocmd('FileType', {
+  group = group,
+  desc = 'Offer to install a missing language server, once per language',
+  callback = function(args)
+    local name, config = missing_language(args.match)
+    if name and not asked[name] then
+      asked[name] = true
+      local label = name:sub(1, 1):upper() .. name:sub(2)
+      require('pure.toast').ask({
+        title = ('Install %s?'):format(config.cmd[1]),
+        message = ('%s files get errors and completion from it.'):format(label),
+        on_yes = function() install(name) end,
+      })
+    end
+  end,
+})
+
+vim.api.nvim_create_user_command('Install', function()
+  local name = missing_language(vim.bo.filetype)
+  if not name then
+    return vim.notify('Nothing to install for this file.')
+  end
+  install(name)
 end, { desc = "Install the language server for this file's language" })
 
 vim.diagnostic.config({
