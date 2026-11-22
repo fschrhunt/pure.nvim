@@ -35,3 +35,5 @@
   servers are suggested in a toast instead of being expected up front, and `:install` installs
   the one for the current file. Tree-sitter parsers build the first time a language is opened.
   Messages appear as toasts in the corner. Python formats with ruff when it's installed.
+- Give floating panels a solid surface with padding instead of an outline: the palette, pickers,
+  completion, key hints, and toasts. Code and the file explorer stay on the terminal background.
