@@ -33,6 +33,7 @@ function M.open(opts)
   -- The prompt panel carries the title; the list panel sits right under it
   -- and carries the counter. Both are solid blocks of the panel color, so they
   -- read as one card, with a row of padding between the prompt and the list.
+  -- The prompt gets the blue bar that marks where your input goes.
   local prompt_buf, list_buf =
     vim.api.nvim_create_buf(false, true), vim.api.nvim_create_buf(false, true)
   local prompt_win = vim.api.nvim_open_win(prompt_buf, true, {
@@ -42,7 +43,16 @@ function M.open(opts)
     width = width,
     height = 1,
     style = 'minimal',
-    border = 'solid',
+    border = { -- the blue bar marks where you type
+      { '┃', 'PureAccent' },
+      ' ',
+      ' ',
+      ' ',
+      ' ',
+      ' ',
+      { '┃', 'PureAccent' },
+      { '┃', 'PureAccent' },
+    },
     title = { { ' ' .. opts.title .. ' ', 'FloatTitle' } },
   })
   local list_win = vim.api.nvim_open_win(list_buf, false, {

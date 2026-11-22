@@ -55,14 +55,14 @@ function M.ask(opts)
     style = 'minimal',
     -- A colored bar down the left side, padding elsewhere, no outline.
     border = {
-      { '┃', 'PureToastAccent' },
+      { '┃', 'PureAccent' },
       ' ',
       ' ',
       ' ',
       ' ',
       ' ',
-      { '┃', 'PureToastAccent' },
-      { '┃', 'PureToastAccent' },
+      { '┃', 'PureAccent' },
+      { '┃', 'PureAccent' },
     },
     zindex = 60,
   })
