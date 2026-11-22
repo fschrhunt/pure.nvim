@@ -9,6 +9,7 @@ usage: ./x [command]
   check     Default; check formatting, shell scripts, and that the config loads
   fmt       Format Lua files
   update    Update plugins and nvim-pack-lock.json
+  sync      Install the plugin versions in nvim-pack-lock.json
   install   Link ~/.config/nvim to this checkout
   hooks     Install the repository's Git hook
   help      Show this help
@@ -39,6 +40,9 @@ case "${1-check}" in
         ;;
     update)
         nvim_here +'lua vim.pack.update(nil, { force = true })' +qa
+        ;;
+    sync)
+        nvim_here +'lua vim.pack.update(nil, { force = true, target = "lockfile" })' +qa
         ;;
     install)
         if [ "$(readlink "$config_dir" 2>/dev/null)" = "$PWD" ]; then

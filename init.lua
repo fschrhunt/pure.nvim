@@ -7,7 +7,7 @@
 vim.g.mapleader = ' '
 
 require('pure.options') -- look and behavior
-require('pure.plugins') -- installs plugins; sets up icons, picker, explorer and git
+require('pure.plugins') -- installs plugins; sets up icons, picker, explorer, git and key hints
 require('pure.syntax') -- tree-sitter highlighting and folding
 require('pure.code') -- language servers, completion and formatting
 require('pure.actions') -- Space keys and the command palette

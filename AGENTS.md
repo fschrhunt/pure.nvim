@@ -10,6 +10,7 @@ keep each change to what it needs.
 ./x check     # StyLua, ShellCheck, and a headless load of the config; CI runs the same checks
 ./x fmt       # format Lua files
 ./x update    # update plugins and nvim-pack-lock.json
+./x sync      # install the plugin versions in nvim-pack-lock.json
 ./x install   # link ~/.config/nvim to this checkout
 ./x hooks     # install the pre-commit hook once per clone
 ```
@@ -24,6 +25,7 @@ keep each change to what it needs.
 - `lsp/`: one file per language server with its command, file types, and settings.
 - `lua/pure/actions.lua`: every action, its Space key, and the command palette.
 - `colors/pure.lua`: the color scheme.
+- `docs/`: user docs, one file per topic: keys, languages, colors, and plugins.
 - `nvim-pack-lock.json`: plugin revisions, written by `vim.pack`. Don't edit it by hand; run
   `./x update`.
 - `.github/workflows/`: CI, releases, and weekly plugin updates (`dependencies.yml`).
@@ -37,3 +39,4 @@ keep each change to what it needs.
   background.
 - Don't change Neovim's built-in keys; they're listed in the palette instead.
 - Name autocommand groups `pure.<module>`.
+- Update `docs/` and the README in the same change as the behavior they describe.
