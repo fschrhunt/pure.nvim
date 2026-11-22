@@ -31,3 +31,7 @@
   explorer is no longer loaded.
 - Show the command palette as a compact list near the top of the screen, with keys and commands
   in a quieter color, and cap the other pickers' size on wide screens.
+- Support 25 languages with one file each in `lsp/`, named after the language. Missing language
+  servers are suggested in a toast instead of being expected up front, and `:install` installs
+  the one for the current file. Tree-sitter parsers build the first time a language is opened.
+  Messages appear as toasts in the corner. Python formats with ruff when it's installed.

@@ -18,6 +18,7 @@ action's command next to its key.
 | `:problems` | Show problems | `Space d` |
 | `:palette` | Command palette | `Space p` |
 | `:format` | Format the file | |
+| `:install` | Install the language server for this file's language | |
 | `:rename` | Rename the symbol under the cursor | `grn` |
 | `:actions` | Code actions | `gra` |
 | `:references` | Find references | `grr` |

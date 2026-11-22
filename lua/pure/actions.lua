@@ -112,6 +112,7 @@ local actions = {
   { 'Code actions', 'gra', vim.lsp.buf.code_action, cmd = 'actions' },
   { 'File outline', 'gO', vim.lsp.buf.document_symbol, cmd = 'outline' },
   { 'Format file', false, 'Format', cmd = 'format' },
+  { 'Install language server', false, 'Install', cmd = 'install' },
   { 'Show problems', '<leader>d', MiniExtra.pickers.diagnostic, cmd = 'problems' },
   { 'Next problem', ']d', function() vim.diagnostic.jump({ count = 1 }) end },
   { 'Comment line', 'gcc', 'normal gcc' },

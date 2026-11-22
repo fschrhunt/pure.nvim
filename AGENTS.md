@@ -20,9 +20,11 @@ keep each change to what it needs.
 - `init.lua`: loads the modules below in order.
 - `lua/pure/options.lua`: options, clipboard, and automatic behavior.
 - `lua/pure/plugins.lua`: the two plugins for `vim.pack` and mini.nvim setup.
-- `lua/pure/syntax.lua`: tree-sitter parsers, highlighting, and folding.
-- `lua/pure/code.lua`: which language servers start, diagnostics, completion, and formatting.
-- `lsp/`: one file per language server with its command, file types, and settings.
+- `lua/pure/syntax.lua`: tree-sitter highlighting and folding, building parsers on first use.
+- `lua/pure/code.lua`: starting installed servers, suggesting missing ones, diagnostics,
+  completion, and formatting.
+- `lsp/`: one file per language, named after it (`go.lua`, `python.lua`), with its server's
+  command, file types, settings, and `install` command.
 - `lua/pure/actions.lua`: every action, its Space key, and the command palette.
 - `colors/pure.lua`: the color scheme.
 - `docs/`: user docs, one file per topic: keys, commands, languages, colors, and plugins.

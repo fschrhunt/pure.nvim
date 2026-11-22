@@ -1,4 +1,4 @@
--- Astro: @astrojs/language-server (npm install -g @astrojs/language-server).
+-- Astro: @astrojs/language-server.
 --
 -- The server needs a TypeScript library: the project's own when it has one,
 -- otherwise the one behind the global `tsc`.
@@ -15,6 +15,7 @@ return {
   cmd = { 'astro-ls', '--stdio' },
   filetypes = { 'astro' },
   root_markers = { 'package.json', 'tsconfig.json', '.git' },
+  install = 'npm install -g @astrojs/language-server',
   before_init = function(params, config)
     params.initializationOptions = { typescript = { tsdk = typescript_lib(config.root_dir) } }
   end,
