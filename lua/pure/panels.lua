@@ -47,4 +47,13 @@ vim.api.nvim_create_autocmd('FileType', {
   callback = vim.schedule_wrap(function() restyle(require('vim._core.ui2').wins.msg) end),
 })
 
+-- Language server popups (hover docs, signatures) separate sections with a
+-- row of ─; draw it faint, so it reads as spacing rather than a line.
+local open_preview = vim.lsp.util.open_floating_preview
+vim.lsp.util.open_floating_preview = function(...)
+  local buf, win = open_preview(...)
+  vim.fn.matchadd('PurePanelDivider', [[^─\+$]], 10, -1, { window = win })
+  return buf, win
+end
+
 return M

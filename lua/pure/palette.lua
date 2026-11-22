@@ -16,6 +16,28 @@ local M = {}
 local panels = require('pure.panels')
 local ns = vim.api.nvim_create_namespace('pure.palette')
 
+-- Character positions of every occurrence of query in text, ignoring case
+-- unless the query has a capital, the way text search matches.
+local function occurrences(text, query)
+  local positions = {}
+  if query == '' then
+    return positions
+  end
+  local haystack = query:find('%u') and text or text:lower()
+  local needle = query:find('%u') and query or query:lower()
+  local from = 1
+  while true do
+    local first, last = haystack:find(needle, from, true)
+    if not first then
+      return positions
+    end
+    for byte = first, last do
+      table.insert(positions, vim.str_utfindex(text, 'utf-32', byte - 1))
+    end
+    from = last + 1
+  end
+end
+
 -- Open a file item in the window the palette was opened from.
 local function open_file(item, how)
   vim.cmd[how](vim.fn.fnameescape(item.path))
@@ -79,7 +101,9 @@ function M.open(opts)
     for i = top, math.min(#matches, top + height - 1) do
       local match = matches[i]
       local icon, icon_hl = '', nil
-      if match.item.path then
+      if match.item.icon then
+        icon, icon_hl = match.item.icon[1] .. ' ', match.item.icon[2]
+      elseif match.item.path then
         icon, icon_hl = MiniIcons.get('file', match.item.path)
         icon = icon .. ' '
       end
@@ -135,8 +159,10 @@ function M.open(opts)
       loading = q ~= ''
       live_cancel = opts.live(q, function(result)
         if q == query() then
-          items, matches, loading =
-            result, vim.tbl_map(function(item) return { item = item } end, result), false
+          items, matches, loading = result, {}, false
+          for _, item in ipairs(result) do
+            table.insert(matches, { item = item, positions = occurrences(item.text, q) })
+          end
           render()
         end
       end)
@@ -321,8 +347,10 @@ function M.search()
   })
 end
 
+-- Problems in open files, each with a dot colored by its severity.
 function M.problems()
-  local items = {}
+  local items, groups =
+    {}, { 'DiagnosticError', 'DiagnosticWarn', 'DiagnosticInfo', 'DiagnosticHint' }
   for _, d in ipairs(vim.diagnostic.get(nil, { severity = { min = vim.diagnostic.severity.HINT } })) do
     local path = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(d.bufnr), ':~:.')
     local message = d.message:gsub('%s*\n%s*', ' ')
@@ -331,6 +359,7 @@ function M.problems()
       path = path,
       lnum = d.lnum + 1,
       col = d.col + 1,
+      icon = { '●', groups[d.severity] },
     })
   end
   M.open({ title = 'Problems', items = items })

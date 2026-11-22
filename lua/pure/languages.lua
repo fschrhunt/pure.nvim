@@ -24,44 +24,78 @@ for name in pairs(languages) do
   end
 end
 
--- Installs (or updates) a server in the background, then starts it. When
--- Neovim runs without a screen, as a script or a coding agent would run
--- `nvim --headless '+Install rust' +qa`, it waits for the install to finish.
-local function install(name)
-  local server = languages[name].cmd[1]
-  vim.notify(('Installing %s…'):format(server))
+local toast = require('pure.toast')
+
+-- Installs (or updates) servers one after another, then starts each. Progress
+-- and the result go to update(text, state), a toast by default. When Neovim
+-- runs without a screen, as `nvim --headless '+Install rust' +qa` would, it
+-- waits for the installs to finish.
+local function install(names, update)
+  local commands = vim.tbl_map(function(name) return languages[name].cmd[1] end, names)
+  update = update or toast.progress(('Installing %s…'):format(table.concat(commands, ' and ')))
   local finished = false
-  servers.install(name, function(ok, message)
-    finished = true
-    vim.notify(message, ok and vim.log.levels.INFO or vim.log.levels.ERROR)
-    if ok then
-      vim.lsp.enable(name)
+  local function step(i)
+    if i > #names then
+      finished = true
+      local verb = #names == 1 and 'is' or 'are'
+      return update(('%s %s installed.'):format(table.concat(commands, ' and '), verb), 'done')
     end
-  end)
+    update(('Installing %s…'):format(commands[i]))
+    servers.install(names[i], function(ok, message)
+      if not ok then
+        finished = true
+        return update(message, 'failed')
+      end
+      vim.lsp.enable(names[i])
+      step(i + 1)
+    end)
+  end
+  step(1)
   if #vim.api.nvim_list_uis() == 0 then
     vim.wait(10 * 60 * 1000, function() return finished end, 200)
   end
 end
 
--- Opening a file whose server is missing asks once per language, in a toast.
--- A server already on PATH is used without asking.
+-- The languages a file type needs whose servers aren't installed.
+local function missing_for(filetype)
+  local names = vim.tbl_filter(
+    function(name)
+      return vim.tbl_contains(languages[name].filetypes, filetype) and not installed(name)
+    end,
+    vim.tbl_keys(languages)
+  )
+  table.sort(names)
+  return names
+end
+
+-- Opening a file whose servers are missing asks once, in one toast, about all
+-- of them; each says what it adds (its `purpose`). A server already on PATH is
+-- used without asking.
 local asked = {}
 vim.api.nvim_create_autocmd('FileType', {
   group = group,
   desc = 'Offer to install missing language servers',
   callback = function(args)
-    for name, config in pairs(languages) do
-      local missing = vim.tbl_contains(config.filetypes, args.match) and not installed(name)
-      if missing and not asked[name] then
-        asked[name] = true
-        local label = name:sub(1, 1):upper() .. name:sub(2)
-        require('pure.toast').ask({
-          title = ('Install %s?'):format(config.cmd[1]),
-          message = ('%s files get errors and completion from it.'):format(label),
-          on_yes = function() install(name) end,
-        })
-      end
+    local names = vim.tbl_filter(function(name) return not asked[name] end, missing_for(args.match))
+    if #names == 0 then
+      return
     end
+    local parts, commands = {}, {}
+    for _, name in ipairs(names) do
+      asked[name] = true
+      local config = languages[name]
+      table.insert(commands, config.cmd[1])
+      table.insert(
+        parts,
+        ('%s from %s'):format(config.purpose or 'errors and completion', config.cmd[1])
+      )
+    end
+    local label = args.match:sub(1, 1):upper() .. args.match:sub(2)
+    toast.ask({
+      title = ('Install %s?'):format(table.concat(commands, ' and ')),
+      message = ('%s files get %s.'):format(label, table.concat(parts, ', and ')),
+      on_yes = function(update) install(names, update) end,
+    })
   end,
 })
 
@@ -72,20 +106,13 @@ vim.api.nvim_create_user_command('Install', function(opts)
     if not languages[opts.args] then
       return vim.notify('No language called ' .. opts.args, vim.log.levels.WARN)
     end
-    return install(opts.args)
+    return install({ opts.args })
   end
-  local missing = vim.tbl_filter(
-    function(name)
-      return vim.tbl_contains(languages[name].filetypes, vim.bo.filetype) and not installed(name)
-    end,
-    vim.tbl_keys(languages)
-  )
-  if #missing == 0 then
+  local names = missing_for(vim.bo.filetype)
+  if #names == 0 then
     return vim.notify('Nothing to install for this file.')
   end
-  for _, name in ipairs(missing) do
-    install(name)
-  end
+  install(names)
 end, {
   nargs = '?',
   complete = function(lead)
@@ -102,30 +129,27 @@ vim.api.nvim_create_user_command('UpdateServers', function()
   if #names == 0 then
     return vim.notify('pure has not installed any language servers.')
   end
-  for _, name in ipairs(names) do
-    install(name)
-  end
+  table.sort(names)
+  install(names)
 end, { desc = 'Update the language servers pure installed' })
 
 -- Once a week, a moment after starting, look for newer versions and ask.
 vim.defer_fn(function()
   servers.check_updates(function(names)
     table.sort(names)
-    require('pure.toast').ask({
+    toast.ask({
       title = ('Update %d language server%s?'):format(#names, #names == 1 and '' or 's'),
       message = 'Newer versions of ' .. table.concat(names, ', ') .. '.',
-      on_yes = function()
-        for _, name in ipairs(names) do
-          install(name)
-        end
-      end,
+      on_yes = function(update) install(names, update) end,
     })
   end)
 end, 3000)
 
 vim.diagnostic.config({
   severity_sort = true,
-  virtual_text = { current_line = true }, -- the message shows on the line you're on
+  -- The message shows at the end of the line you're on, after two spaces; the
+  -- dot by the line number already marks it.
+  virtual_text = { current_line = true, prefix = '', spacing = 2 },
   signs = {
     text = {
       [vim.diagnostic.severity.ERROR] = '●',
@@ -138,8 +162,9 @@ vim.diagnostic.config({
 
 -- Completion ----------------------------------------------------------------
 
--- Suggestions pop up while typing: language server first, then words from
--- open files. Accepting one also applies its imports and snippets.
+-- Suggestions pop up while typing: from the language server when one is
+-- attached, otherwise words from open files. Accepting one also applies its
+-- imports and snippets.
 vim.o.autocomplete = true
 vim.o.complete = 'o,.,w'
 vim.o.completeopt = 'menuone,noselect,popup,fuzzy'
@@ -148,8 +173,11 @@ vim.api.nvim_create_autocmd('LspAttach', {
   group = group,
   callback = function(args)
     local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
+    -- Code keeps pure's colors from tree-sitter; servers don't recolor it.
+    client.server_capabilities.semanticTokensProvider = nil
     if client:supports_method('textDocument/completion') then
       vim.lsp.completion.enable(true, client.id, args.buf)
+      vim.bo[args.buf].complete = 'o' -- suggestions from the server alone, not plain words
     end
   end,
 })

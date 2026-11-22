@@ -93,8 +93,33 @@ require('mini.diff').setup({
 
 -- Press Space or g and pause: a small window lists the keys that can follow,
 -- with their names. Only keys that exist with a description are listed (ours,
--- and Neovim's own code keys like rename and comment), not every built-in command.
-require('mini.clue').setup({
+-- and Neovim's own code keys, renamed here in plain words).
+local clue = require('mini.clue')
+clue.setup({
   triggers = { { mode = 'n', keys = '<Leader>' }, { mode = 'n', keys = 'g' } },
-  window = { delay = 300 },
+  clues = { { mode = 'n', keys = 'gr', desc = 'Code' } },
+  window = { delay = 300, config = { title = ' Keys ' } },
+})
+-- Neovim's own keys get plain names once everything has loaded (g% comes from
+-- a plugin that loads after this file).
+vim.api.nvim_create_autocmd('VimEnter', {
+  group = group,
+  once = true,
+  callback = function()
+    for lhs, desc in pairs({
+      gO = 'File outline',
+      gx = 'Open link',
+      gc = 'Comment',
+      gcc = 'Comment line',
+      ['g%'] = 'Back to matching bracket',
+      grn = 'Rename',
+      gra = 'Code actions',
+      grr = 'References',
+      gri = 'Implementation',
+      grt = 'Type definition',
+      grx = 'Run code lens',
+    }) do
+      pcall(clue.set_mapping_desc, 'n', lhs, desc)
+    end
+  end,
 })
